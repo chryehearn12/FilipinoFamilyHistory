@@ -1,4 +1,4 @@
-surname,given_name,event,year,parish,place
-Templado,Rita,Confirmation,1862,Moalboal,Cebu
-Tabanao,Claudia,Confirmation,1862,Moalboal,Cebu
-Gargar,Apolonio,Confirmation,1862,Moalboal,Cebu
+given_name,surname,event,year,parish,place
+Rita,Templado,Confirmation,1862,Moalboal,Cebu
+Claudia,Tabanao,Confirmation,1862,Moalboal,Cebu
+Apolonio,Gargar,Confirmation,1862,Moalboal,Cebu
