@@ -1,0 +1,49 @@
+---
+layout: null
+permalink: /search/index.json
+---
+{
+{% comment %}
+  This generates a small JSON index from your collections.
+  Add and adapt whichever fields you need. The example below shows how to collect
+  Baptisms, Marriages and Burials if you have collections named _baptisms, _marriages, _burials.
+{% endcomment %}
+
+"baptisms": [
+{% for item in site.baptisms %}
+  {
+    "id": "{{ item.id | default: item.url }}",
+    "forename": {{ item.forename | jsonify }},
+    "surname": {{ item.surname | jsonify }},
+    "church": {{ item.church | jsonify }},
+    "year": {{ item.year | default: item.date | date: "%Y" | jsonify }},
+    "place": {{ item.place | jsonify }}
+  }{% if forloop.last == false %},{% endif %}
+{% endfor %}
+],
+
+"marriages": [
+{% for item in site.marriages %}
+  {
+    "id": "{{ item.id | default: item.url }}",
+    "spouse": {{ item.spouse | jsonify }},
+    "surname": {{ item.surname | jsonify }},
+    "place": {{ item.place | jsonify }},
+    "year": {{ item.year | default: item.date | date: "%Y" | jsonify }}
+  }{% if forloop.last == false %},{% endif %}
+{% endfor %}
+],
+
+"burials": [
+{% for item in site.burials %}
+  {
+    "id": "{{ item.id | default: item.url }}",
+    "forename": {{ item.forename | jsonify }},
+    "surname": {{ item.surname | jsonify }},
+    "year": {{ item.year | default: item.date | date: "%Y" | jsonify }},
+    "place": {{ item.place | jsonify }}
+  }{% if forloop.last == false %},{% endif %}
+{% endfor %}
+]
+
+}
