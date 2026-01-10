@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Burial Records - Filipino Genealogy</title>
+  <title>Baptism Records - Filipino Genealogy</title>
   <style>
     body { margin:0; font-family: Arial; background:#f7f7f7; }
     a { text-decoration:none; color:inherit; }
@@ -43,16 +43,18 @@
   <div class="sidebar">
     <h2>Menu</h2>
     <a href="index.html">Home</a>
+    <a href="search.html">Search Records</a>
+    <a href="burial.html">Burial Records</a>
+    <a href="baptism.html">Baptism Records</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
-    <a href="burial.html">Burial Records</a>
   </div>
 
   <div class="main">
-    <h1>Burial Records</h1>
+    <h1>Baptism Records</h1>
 
     <div class="search-form">
-      <input type="text" id="searchInput" placeholder="Search burial records">
+      <input type="text" id="searchInput" placeholder="Search baptism records">
       <button id="searchBtn" disabled>Search</button>
     </div>
 
@@ -77,15 +79,15 @@
 let data = [];
 const searchBtn = document.getElementById('searchBtn');
 
-fetch('burial.csv') // <-- use a separate CSV for burial records
+fetch('baptism.csv') // <-- dedicated CSV for baptism
   .then(response => response.text())
   .then(text => {
     data = parseCSV(text);
     searchBtn.disabled = false;
   })
   .catch(err => {
-    console.error("Failed to load burial.csv:", err);
-    alert("Could not load burial.csv. Make sure it is in the same folder as burial.html");
+    console.error("Failed to load baptism.csv:", err);
+    alert("Could not load baptism.csv. Make sure it is in the same folder as baptism.html");
   });
 
 function parseCSV(text){
@@ -139,3 +141,4 @@ function renderTable(rows){
 
 </body>
 </html>
+
