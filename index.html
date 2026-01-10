@@ -1,143 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Filipino Genealogy Search</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    input { padding: 5px; margin: 5px 0; width: 300px; }
-    ul { list-style: none; padding-left: 0; margin-top: 0; border: 1px solid #ccc; max-width: 300px; }
-    li { padding: 3px; cursor: pointer; }
-    li:hover { background-color: #eee; }
-    table { border-collapse: collapse; width: 100%; margin-top: 10px; display:none; }
-    th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
-    th { background-color: #f2f2f2; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    input[type="file"], input[type="text"] {
+      display: block;
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    tr.hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-<h1>Filipino Genealogy Search</h1>
+  <h1>Filipino Genealogy Search</h1>
 
-<input type="file" id="csvFile" accept=".csv">
-<br>
-<input type="text" id="searchInput" placeholder="Search by any column">
-<ul id="suggestions"></ul>
-<table id="resultsTable">
-  <thead>
-    <tr>
-      <th>Given Name</th>
-      <th>Surname</th>
-      <th>Event</th>
-      <th>Year</th>
-      <th>Parish</th>
-      <th>Place</th>
-    </tr>
-  </thead>
-  <tbody id="resultsBody"></tbody>
-</table>
+  <input type="file" id="csvFile" accept=".csv" />
+  <input type="text" id="searchInput" placeholder="Search by any column" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script>
-let data = [];
-let suggestionsSet = new Set();
+  <table id="genealogyTable">
+    <thead>
+      <tr>
+        <th>Given Name</th>
+        <th>Surname</th>
+        <th>Event</th>
+        <th>Year</th>
+        <th>Parish</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows will appear here after uploading CSV -->
+    </tbody>
+  </table>
 
-// Clean CSV rows
-function cleanRow(row) {
-  const clean = {};
-  Object.keys(row).forEach(k => {
-    const key = k.trim().replace(/^"|"$/g,'');
-    const value = row[k] ? row[k].trim().replace(/^"|"$/g,'') : '';
-    clean[key] = value;
-  });
-  return clean;
-}
+  <script>
+    const fileInput = document.getElementById('csvFile');
+    const tableBody = document.querySelector('#genealogyTable tbody');
+    const searchInput = document.getElementById('searchInput');
 
-// Load CSV
-document.getElementById('csvFile').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+    // Load CSV and populate table
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-  Papa.parse(file, {
-    header: true,
-    skipEmptyLines: true,
-    complete: function(results) {
-      data = results.data.map(cleanRow).filter(r => r.surname);
-      suggestionsSet = new Set();
-      data.forEach(row => {
-        Object.values(row).forEach(val => {
-          if (val) suggestionsSet.add(val);
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        const rows = text.trim().split('\n').map(r => r.split(','));
+        tableBody.innerHTML = '';
+
+        rows.forEach((row, index) => {
+          if (index === 0) return; // skip header row
+          const tr = document.createElement('tr');
+          row.forEach(cell => {
+            const td = document.createElement('td');
+            td.textContent = cell;
+            tr.appendChild(td);
+          });
+          tableBody.appendChild(tr);
         });
-      });
-      document.getElementById('resultsBody').innerHTML = '';
-      document.getElementById('suggestions').innerHTML = '';
-      document.getElementById('resultsTable').style.display = 'none'; // hide table initially
-      alert(`CSV loaded! ${data.length} records ready to search.`);
-    }
-  });
-});
-
-// Show results in table
-function showResults(search) {
-  const tbody = document.getElementById('resultsBody');
-  tbody.innerHTML = '';
-
-  if (!search) {
-    document.getElementById('resultsTable').style.display = 'none';
-    return;
-  }
-
-  const filtered = data.filter(row =>
-    Object.values(row).some(val => val.toLowerCase().includes(search.toLowerCase()))
-  );
-
-  if (filtered.length === 0) {
-    document.getElementById('resultsTable').style.display = 'none';
-    return;
-  }
-
-  filtered.forEach(row => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${row.given_name}</td>
-      <td>${row.surname}</td>
-      <td>${row.event}</td>
-      <td>${row.year}</td>
-      <td>${row.parish}</td>
-      <td>${row.place}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  document.getElementById('resultsTable').style.display = 'table';
-}
-
-// Auto-suggestions
-document.getElementById('searchInput').addEventListener('input', function() {
-  const input = this.value.toLowerCase();
-  const suggestionsEl = document.getElementById('suggestions');
-  suggestionsEl.innerHTML = '';
-
-  if (!input) {
-    document.getElementById('resultsTable').style.display = 'none';
-    return;
-  }
-
-  Array.from(suggestionsSet)
-    .filter(s => s.toLowerCase().includes(input))
-    .slice(0, 10)
-    .forEach(s => {
-      const li = document.createElement('li');
-      li.textContent = s;
-      li.addEventListener('click', () => {
-        document.getElementById('searchInput').value = s;
-        suggestionsEl.innerHTML = '';
-        showResults(s);
-      });
-      suggestionsEl.appendChild(li);
+      };
+      reader.readAsText(file);
     });
 
-  showResults(input);
-});
-</script>
+    // Search/filter table
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const rows = tableBody.querySelectorAll('tr');
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.classList.toggle('hidden', !text.includes(searchTerm));
+      });
+    });
+  </script>
+
+</body>
+</html>
 
 </body>
 </html>
