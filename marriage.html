@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Marriage Records - Filipino Genealogy</title>
+  <style>
+    body { margin:0; font-family: Arial; background:#f7f7f7; }
+    a { text-decoration:none; color:inherit; }
+
+    .wrapper { display:flex; min-height:100vh; }
+    .sidebar { width:220px; background:#d32f2f; color:white; flex-shrink:0; display:flex; flex-direction:column; padding-top:20px; }
+    .sidebar h2 { text-align:center; margin-bottom:20px; font-size:18px; }
+    .sidebar a { padding:12px 20px; display:block; color:white; border-bottom:1px solid rgba(255,255,255,0.1); }
+    .sidebar a:hover { background:#b71c1c; }
+
+    .main { flex:1; padding:20px; }
+    h1 { text-align:center; margin-bottom:20px; }
+
+    .search-form { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+    #searchInput { padding:8px; font-size:16px; width:300px; border:1px solid #ccc; border-radius:4px; }
+    #searchBtn { padding:8px 12px; font-size:16px; border:none; background:#d32f2f; color:white; border-radius:4px; cursor:pointer; }
+    #searchBtn:disabled { background:#ccc; cursor:not-allowed; }
+    #searchBtn:hover:enabled { background:#b71c1c; }
+
+    table { width:100%; border-collapse:collapse; display:none; }
+    th, td { padding:10px; border:1px solid #ddd; text-align:left; }
+    th { background:#f2f2f2; }
+    tr:hover { background:#f9f9f9; }
+
+    #noResults { text-align:center; margin-top:10px; display:none; color:#777; }
+
+    @media(max-width:768px){
+      .wrapper{flex-direction:column;}
+      .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
+      .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
+      .sidebar a:last-child{border-right:none;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="baptism.html">Baptism Records</a>
+    <a href="confirmation.html">Confirmation Records</a>
+    <a href="marriage.html">Marriage Records</a>
+    <a href="death.html">Death Records</a>
+    <a href="burial.html">Burial Records</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="main">
+    <h1>Marriage Records</h1>
+
+    <div class="search-form">
+      <input type="text" id="searchInput" placeholder="Search burial records">
+      <button id="searchBtn" disabled>Search</button>
+    </div>
+
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>Given Name</th>
+          <th>Surname</th>
+          <th>Event</th>
+          <th>Year</th>
+          <th>Parish</th>
+          <th>Place</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="noResults">No results found.</div>
+  </div>
+</div>
+
+<script>
+let data = [];
+const searchBtn = document.getElementById('searchBtn');
+
+fetch('marriage.csv') // <-- use a separate CSV for burial records
+  .then(response => response.text())
+  .then(text => {
+    data = parseCSV(text);
+    searchBtn.disabled = false;
+  })
+  .catch(err => {
+    console.error("Failed to load marriage.csv:", err);
+    alert("Could not load marriage.csv. Make sure it is in the same folder as marriage.html");
+  });
+
+function parseCSV(text){
+  const lines = text.trim().split(/\r?\n/);
+  const headers = lines[0].split(',').map(h=>h.trim().toLowerCase().replace(' ','_'));
+  return lines.slice(1).map(line=>{
+    const regex=/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
+    const values=[...line.matchAll(regex)].map(m=>m[0].replace(/^"|"$/g,''));
+    const obj={};
+    headers.forEach((h,i)=>obj[h]=values[i]||'');
+    return obj;
+  });
+}
+
+searchBtn.addEventListener('click',()=>{
+  const query=document.getElementById('searchInput').value.toLowerCase().trim();
+  if(!query){
+    document.getElementById('resultsTable').style.display='none';
+    document.getElementById('noResults').style.display='none';
+    return;
+  }
+  const filtered = data.filter(row=>Object.values(row).some(v=>v.toLowerCase().includes(query)));
+  renderTable(filtered);
+});
+
+document.getElementById('searchInput').addEventListener('keypress', e=>{
+  if(e.key==='Enter') searchBtn.click();
+});
+
+function renderTable(rows){
+  const tbody=document.querySelector('#resultsTable tbody');
+  tbody.innerHTML='';
+  if(rows.length===0){
+    document.getElementById('resultsTable').style.display='none';
+    document.getElementById('noResults').style.display='block';
+    return;
+  }
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    ['given_name','surname','event','year','parish','place'].forEach(k=>{
+      const td=document.createElement('td');
+      td.textContent=r[k]||'';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  document.getElementById('resultsTable').style.display='table';
+  document.getElementById('noResults').style.display='none';
+}
+</script>
+
+</body>
+</html>
