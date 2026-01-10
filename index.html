@@ -1,89 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Philippine Genealogy Index</title>
-<style>
-body { font-family: Arial, sans-serif; }
-.search { background:#d8c6a3; padding:10px; }
-.search input { margin:5px; padding:5px; }
-table { border-collapse: collapse; width:100%; margin-top:10px; }
-th, td { border:1px solid #999; padding:6px; }
-</style>
+  <title>Filipino Genealogy Search</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { padding: 5px; margin: 5px 0; }
+    li { margin: 3px 0; }
+  </style>
 </head>
-
 <body>
 
-<h2>Search Records</h2>
+<h1>Filipino Genealogy Search</h1>
 
-<div class="search">
-  <input id="given" placeholder="Forename">
-  <input id="surname" placeholder="Surname">
-  <input id="year" placeholder="Year">
-  <input id="parish" placeholder="Parish">
-  <input id="province" placeholder="Place">
-  <button onclick="search()">Search</button>
-</div>
-
-<table>
-<thead>
-<tr>
-  <th>Name</th>
-  <th>Event</th>
-  <th>Year</th>
-  <th>Parish</th>
-  <th>Place</th>
-</tr>
-</thead>
-<tbody id="results"></tbody>
-</table>
+<input type="file" id="csvFile" accept=".csv">
+<br>
+<input type="text" id="searchInput" placeholder="Search by surname or given name">
+<ul id="results"></ul>
 
 <script>
 let data = [];
 
-fetch("records.csv")
-.then(r => r.text())
-.then(text => {
-  const rows = text.split("\n").slice(1);
-  rows.forEach(row => {
-    const cols = row.split(",");
-    data.push({
-      given: cols[0],
-      surname: cols[1],
-      event: cols[2],
-      year: cols[3],
-      parish: cols[4],
-      place: cols[5]
-    });
-  });
-});
-
-function search() {
-  const g = given.value.toLowerCase();
-  const s = surname.value.toLowerCase();
-  const y = year.value;
-  const p = parish.value.toLowerCase();
-  const pr = place.value.toLowerCase();
-
-  results.innerHTML = "";
-
-  data.filter(r =>
-    (!g || r.given.toLowerCase().includes(g)) &&
-    (!s || r.surname.toLowerCase().includes(s)) &&
-    (!y || r.year === y) &&
-    (!p || r.parish.toLowerCase().includes(p)) &&
-    (!pr || r.place.toLowerCase().includes(pr))
-  ).forEach(r => {
-    results.innerHTML += `
-      <tr>
-        <td>${r.given} ${r.surname}</td>
-        <td>${r.event}</td>
-        <td>${r.year}</td>
-        <td>${r.parish}</td>
-        <td>${r.place}</td>
-      </tr>`;
+// Function to parse CSV
+function parseCSV(text) {
+  const lines = text.split('\n').filter(l => l.trim() !== '');
+  const header = lines[0].split(',').map(h => h.trim());
+  return lines.slice(1).map(line => {
+    // Handle commas inside quotes
+    const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g).map(v => v.replace(/^"|"$/g,''));
+    const obj = {};
+    header.forEach((h, i) => obj[h] = values[i] || '');
+    return obj;
   });
 }
+
+// Handle CSV upload
+document.getElementById('csvFile').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    data = parseCSV(e.target.result);
+    document.getElementById('results').innerHTML = '';
+    alert(`CSV loaded! ${data.length} records ready to search.`);
+  }
+  reader.readAsText(file);
+});
+
+// Handle search
+document.getElementById('searchInput').addEventListener('input', function() {
+  const search = this.value.toLowerCase();
+  const resultsEl = document.getElementById('results');
+  resultsEl.innerHTML = '';
+  if (!search) return;
+  data.filter(row => 
+      row.surname.toLowerCase().includes(search) || 
+      row.given_name.toLowerCase().includes(search)
+    ).forEach(row => {
+      const li = document.createElement('li');
+      li.textContent = `${row.given_name} ${row.surname} — ${row.event}, ${row.year}, ${row.parish}, ${row.place}`;
+      resultsEl.appendChild(li);
+    });
+});
 </script>
 
 </body>
