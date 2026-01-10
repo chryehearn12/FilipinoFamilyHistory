@@ -1,0 +1,34 @@
+/* Basic layout and styles */
+:root{
+  --accent: #bf8f5b;
+  --muted: #bda78b;
+  --text: #3b2b21;
+  --bg: #fffaf6;
+}
+
+html,body{height:100%;margin:0;font-family: "Segoe UI", Roboto, Arial, sans-serif;background:var(--bg);color:var(--text);}
+.site-header{border-bottom:3px solid var(--accent);padding:18px 24px;background:#fff}
+.header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.site-title{margin:0;color:var(--text);font-size:20px;font-weight:700}
+.top-nav a{color:var(--text);text-decoration:none;margin-left:8px;font-size:14px}
+
+.site-body{display:flex;max-width:1100px;margin:18px auto;padding:0 12px;min-height:60vh}
+.site-sidebar{width:220px;padding-right:20px}
+.sidebar-box{background:#e6d7bd;padding:12px;border-radius:2px}
+.sidebar-image{display:block;width:100%;height:auto;margin-bottom:12px}
+.sidebar-nav{list-style:none;padding:0;margin:0}
+.sidebar-nav li{margin:6px 0}
+.sidebar-nav a{color:#3b2b21;text-decoration:none;font-weight:700}
+
+.site-main{flex:1;background:#fff;padding:18px;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,0.02)}
+h2.section-title{color:var(--accent);margin-top:0}
+.section{margin-bottom:28px;border-top:4px solid var(--muted);padding-top:12px}
+.search-box{display:flex;gap:8px;align-items:center;background:#f5eada;padding:10px;border:1px solid var(--muted);border-radius:4px}
+.search-box input[type="text"]{padding:6px 8px;border:1px solid #c9b39a;background:white}
+.search-btn{background:var(--accent);color:white;border:none;padding:6px 10px;border-radius:4px;cursor:pointer}
+
+.results{margin-top:12px}
+.result-item{padding:8px 6px;border-bottom:1px dashed #eee;display:flex;justify-content:space-between}
+.result-left{font-weight:600}
+.result-right{color:#8a6545;font-size:13px}
+.note{color:#b81a1a;font-weight:700}
