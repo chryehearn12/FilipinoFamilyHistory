@@ -5,7 +5,7 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     input, button { padding: 5px; margin: 5px 0; }
-    ul { list-style: none; padding-left: 0; }
+    ul { list-style: none; padding-left: 0; margin-top: 5px; }
     li { margin: 3px 0; cursor: pointer; }
     li:hover { background-color: #eee; }
   </style>
@@ -20,23 +20,24 @@
 <ul id="suggestions"></ul>
 <ul id="results"></ul>
 
+<!-- Include PapaParse library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
 let data = [];
 let uniqueSurnames = [];
 
-// Clean keys and values from quotes/spaces
+// Clean CSV row: remove quotes and extra spaces
 function cleanRow(row) {
   const clean = {};
   Object.keys(row).forEach(k => {
-    const key = k.trim().replace(/^"|"$/g,'');
+    const key = k.trim().replace(/^"|"$/g,'');       // remove quotes from keys
     const value = row[k] ? row[k].trim().replace(/^"|"$/g,'') : '';
     clean[key] = value;
   });
   return clean;
 }
 
-// CSV upload
+// Load CSV file
 document.getElementById('csvFile').addEventListener('change', function(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -45,10 +46,11 @@ document.getElementById('csvFile').addEventListener('change', function(e) {
     header: true,
     skipEmptyLines: true,
     complete: function(results) {
-      data = results.data.map(cleanRow);
-      // create list of unique surnames for suggestions
-      const surnames = data.map(r => r.surname).filter(Boolean);
-      uniqueSurnames = [...new Set(surnames)].sort();
+      // Clean all rows and filter out any missing surnames
+      data = results.data.map(cleanRow).filter(r => r.surname);
+      // Build unique surname list for suggestions
+      const surnames = data.map(r => r.surname);
+      uniqueSurnames = [...new Set(surnames)].sort((a,b)=>a.localeCompare(b));
       document.getElementById('results').innerHTML = '';
       document.getElementById('suggestions').innerHTML = '';
       alert(`CSV loaded! ${data.length} records ready to search.`);
@@ -60,7 +62,7 @@ document.getElementById('csvFile').addEventListener('change', function(e) {
 function showResults(surname) {
   const resultsEl = document.getElementById('results');
   resultsEl.innerHTML = '';
-  data.filter(row => row.surname && row.surname.toLowerCase() === surname.toLowerCase())
+  data.filter(row => row.surname.toLowerCase() === surname.toLowerCase())
       .forEach(row => {
         const li = document.createElement('li');
         li.textContent = `${row.given_name} ${row.surname} — ${row.event}, ${row.year}, ${row.parish}, ${row.place}`;
@@ -68,7 +70,7 @@ function showResults(surname) {
       });
 }
 
-// Auto-suggestions
+// Auto-suggest surnames
 document.getElementById('searchInput').addEventListener('input', function() {
   const input = this.value.toLowerCase();
   const suggestionsEl = document.getElementById('suggestions');
