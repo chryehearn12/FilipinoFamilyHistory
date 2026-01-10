@@ -1,54 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Baptism Records - Filipino Genealogy</title>
-  <style>
-    body { margin:0; font-family: Arial; background:#f7f7f7; }
-    a { text-decoration:none; color:inherit; }
+<meta charset="UTF-8">
+<title>Baptism Records – Filipino Family History</title>
 
-    .wrapper { display:flex; min-height:100vh; }
-    .sidebar { width:220px; background:#d32f2f; color:white; flex-shrink:0; display:flex; flex-direction:column; padding-top:20px; }
-    .sidebar h2 { text-align:center; margin-bottom:20px; font-size:18px; }
-    .sidebar a { padding:12px 20px; display:block; color:white; border-bottom:1px solid rgba(255,255,255,0.1); }
-    .sidebar a:hover { background:#b71c1c; }
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f5f5f5;
+}
 
-    .main { flex:1; padding:20px; }
-    h1 { text-align:center; margin-bottom:20px; }
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
 
-    .search-form { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
-    #searchInput { padding:8px; font-size:16px; width:300px; border:1px solid #ccc; border-radius:4px; }
-    #searchBtn { padding:8px 12px; font-size:16px; border:none; background:#d32f2f; color:white; border-radius:4px; cursor:pointer; }
-    #searchBtn:disabled { background:#ccc; cursor:not-allowed; }
-    #searchBtn:hover:enabled { background:#b71c1c; }
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #2c2c2c;
+  color: white;
+  padding: 20px;
+}
 
-    table { width:100%; border-collapse:collapse; display:none; }
-    th, td { padding:10px; border:1px solid #ddd; text-align:left; }
-    th { background:#f2f2f2; }
-    tr:hover { background:#f9f9f9; }
+.sidebar h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
 
-    #noResults { text-align:center; margin-top:10px; display:none; color:#777; }
+.sidebar a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
 
-    @media(max-width:768px){
-      .wrapper{flex-direction:column;}
-      .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
-      .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
-      .sidebar a:last-child{border-right:none;}
-    }
-  </style>
+.sidebar a:hover {
+  text-decoration: underline;
+}
+
+/* Main content */
+.main {
+  flex: 1;
+  padding: 30px;
+  background: white;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.search-form {
+  margin-bottom: 20px;
+}
+
+.search-form input {
+  padding: 8px;
+  font-size: 16px;
+  width: 300px;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  display: none;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background: #eee;
+}
+
+#noResults {
+  display: none;
+  margin-top: 20px;
+  color: #777;
+}
+</style>
 </head>
+
 <body>
 
-<div class="wrapper">
+<div class="layout">
+
   <div class="sidebar">
-    <h2>Menu</h2>
+    <h2>Filipino Family History</h2>
     <a href="index.html">Home</a>
+    <a href="search.html">General Search</a>
+    <a href="burials.html">Burial Records</a>
+    <a href="baptisms.html">Baptism Records</a>
     <a href="about.html">About</a>
-    <a href="baptism.html">Baptism Records</a>
-    <a href="confirmation.html">Confirmation Records</a>
-    <a href="marriage.html">Marriage Records</a>
-    <a href="death.html">Death Records</a>
-    <a href="burial.html">Burial Records</a>
     <a href="contact.html">Contact</a>
   </div>
 
@@ -56,91 +104,69 @@
     <h1>Baptism Records</h1>
 
     <div class="search-form">
-      <input type="text" id="searchInput" placeholder="Search baptism records">
-      <button id="searchBtn" disabled>Search</button>
+      <input type="text" id="searchInput" placeholder="Search any field...">
     </div>
 
     <table id="resultsTable">
       <thead>
         <tr>
-          <th>Given Name</th>
           <th>Surname</th>
-          <th>Event</th>
+          <th>Given Name</th>
           <th>Year</th>
+          <th>Mother</th>
+          <th>Father</th>
           <th>Parish</th>
           <th>Place</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
+
     <div id="noResults">No results found.</div>
+
   </div>
 </div>
 
 <script>
-let data = [];
-const searchBtn = document.getElementById('searchBtn');
+let records = [];
 
-fetch('baptism.csv') // <-- dedicated CSV for baptism
-  .then(response => response.text())
+fetch("baptisms.csv")
+  .then(res => res.text())
   .then(text => {
-    data = parseCSV(text);
-    searchBtn.disabled = false;
-  })
-  .catch(err => {
-    console.error("Failed to load baptism.csv:", err);
-    alert("Could not load baptism.csv. Make sure it is in the same folder as baptism.html");
+    records = text.trim().split("\n").slice(1).map(row => row.split(","));
   });
 
-function parseCSV(text){
-  const lines = text.trim().split(/\r?\n/);
-  const headers = lines[0].split(',').map(h=>h.trim().toLowerCase().replace(' ','_'));
-  return lines.slice(1).map(line=>{
-    const regex=/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
-    const values=[...line.matchAll(regex)].map(m=>m[0].replace(/^"|"$/g,''));
-    const obj={};
-    headers.forEach((h,i)=>obj[h]=values[i]||'');
-    return obj;
-  });
-}
+document.getElementById("searchInput").addEventListener("input", function () {
+  const term = this.value.toLowerCase();
+  const tbody = document.querySelector("#resultsTable tbody");
 
-searchBtn.addEventListener('click',()=>{
-  const query=document.getElementById('searchInput').value.toLowerCase().trim();
-  if(!query){
-    document.getElementById('resultsTable').style.display='none';
-    document.getElementById('noResults').style.display='none';
+  tbody.innerHTML = "";
+
+  if (!term) {
+    document.getElementById("resultsTable").style.display = "none";
+    document.getElementById("noResults").style.display = "none";
     return;
   }
-  const filtered = data.filter(row=>Object.values(row).some(v=>v.toLowerCase().includes(query)));
-  renderTable(filtered);
-});
 
-document.getElementById('searchInput').addEventListener('keypress', e=>{
-  if(e.key==='Enter') searchBtn.click();
-});
+  let matches = 0;
 
-function renderTable(rows){
-  const tbody=document.querySelector('#resultsTable tbody');
-  tbody.innerHTML='';
-  if(rows.length===0){
-    document.getElementById('resultsTable').style.display='none';
-    document.getElementById('noResults').style.display='block';
-    return;
-  }
-  rows.forEach(r=>{
-    const tr=document.createElement('tr');
-    ['given_name','surname','event','year','parish','place'].forEach(k=>{
-      const td=document.createElement('td');
-      td.textContent=r[k]||'';
-      tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
+  records.forEach(cols => {
+    if (cols.some(col => col.toLowerCase().includes(term))) {
+      const tr = document.createElement("tr");
+      cols.forEach(col => {
+        const td = document.createElement("td");
+        td.textContent = col;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+      matches++;
+    }
   });
-  document.getElementById('resultsTable').style.display='table';
-  document.getElementById('noResults').style.display='none';
-}
+
+  document.getElementById("resultsTable").style.display = matches ? "table" : "none";
+  document.getElementById("noResults").style.display = matches ? "none" : "block";
+});
 </script>
 
 </body>
 </html>
-
