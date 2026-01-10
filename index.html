@@ -21,7 +21,7 @@ th, td { border:1px solid #999; padding:6px; }
   <input id="surname" placeholder="Surname">
   <input id="year" placeholder="Year">
   <input id="parish" placeholder="Parish">
-  <input id="province" placeholder="Province">
+  <input id="province" placeholder="Place">
   <button onclick="search()">Search</button>
 </div>
 
@@ -32,7 +32,7 @@ th, td { border:1px solid #999; padding:6px; }
   <th>Event</th>
   <th>Year</th>
   <th>Parish</th>
-  <th>Province</th>
+  <th>Place</th>
 </tr>
 </thead>
 <tbody id="results"></tbody>
@@ -53,7 +53,7 @@ fetch("records.csv")
       event: cols[2],
       year: cols[3],
       parish: cols[4],
-      province: cols[5]
+      place: cols[5]
     });
   });
 });
@@ -63,7 +63,7 @@ function search() {
   const s = surname.value.toLowerCase();
   const y = year.value;
   const p = parish.value.toLowerCase();
-  const pr = province.value.toLowerCase();
+  const pr = place.value.toLowerCase();
 
   results.innerHTML = "";
 
@@ -72,7 +72,7 @@ function search() {
     (!s || r.surname.toLowerCase().includes(s)) &&
     (!y || r.year === y) &&
     (!p || r.parish.toLowerCase().includes(p)) &&
-    (!pr || r.province.toLowerCase().includes(pr))
+    (!pr || r.place.toLowerCase().includes(pr))
   ).forEach(r => {
     results.innerHTML += `
       <tr>
@@ -80,7 +80,7 @@ function search() {
         <td>${r.event}</td>
         <td>${r.year}</td>
         <td>${r.parish}</td>
-        <td>${r.province}</td>
+        <td>${r.place}</td>
       </tr>`;
   });
 }
