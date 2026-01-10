@@ -5,7 +5,9 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     input, button { padding: 5px; margin: 5px 0; }
-    li { margin: 3px 0; }
+    ul { list-style: none; padding-left: 0; }
+    li { margin: 3px 0; cursor: pointer; }
+    li:hover { background-color: #eee; }
   </style>
 </head>
 <body>
@@ -14,52 +16,76 @@
 
 <input type="file" id="csvFile" accept=".csv">
 <br>
-<input type="text" id="searchInput" placeholder="Search by surname or given name">
+<input type="text" id="searchInput" placeholder="Search by surname">
+<ul id="suggestions"></ul>
 <ul id="results"></ul>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
 let data = [];
+let uniqueSurnames = [];
 
-// Function to parse CSV
-function parseCSV(text) {
-  const lines = text.split('\n').filter(l => l.trim() !== '');
-  const header = lines[0].split(',').map(h => h.trim());
-  return lines.slice(1).map(line => {
-    // Handle commas inside quotes
-    const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g).map(v => v.replace(/^"|"$/g,''));
-    const obj = {};
-    header.forEach((h, i) => obj[h] = values[i] || '');
-    return obj;
+// Clean keys and values from quotes/spaces
+function cleanRow(row) {
+  const clean = {};
+  Object.keys(row).forEach(k => {
+    const key = k.trim().replace(/^"|"$/g,'');
+    const value = row[k] ? row[k].trim().replace(/^"|"$/g,'') : '';
+    clean[key] = value;
   });
+  return clean;
 }
 
-// Handle CSV upload
+// CSV upload
 document.getElementById('csvFile').addEventListener('change', function(e) {
   const file = e.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    data = parseCSV(e.target.result);
-    document.getElementById('results').innerHTML = '';
-    alert(`CSV loaded! ${data.length} records ready to search.`);
-  }
-  reader.readAsText(file);
+
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      data = results.data.map(cleanRow);
+      // create list of unique surnames for suggestions
+      const surnames = data.map(r => r.surname).filter(Boolean);
+      uniqueSurnames = [...new Set(surnames)].sort();
+      document.getElementById('results').innerHTML = '';
+      document.getElementById('suggestions').innerHTML = '';
+      alert(`CSV loaded! ${data.length} records ready to search.`);
+    }
+  });
 });
 
-// Handle search
-document.getElementById('searchInput').addEventListener('input', function() {
-  const search = this.value.toLowerCase();
+// Show results for a surname
+function showResults(surname) {
   const resultsEl = document.getElementById('results');
   resultsEl.innerHTML = '';
-  if (!search) return;
-  data.filter(row => 
-      row.surname.toLowerCase().includes(search) || 
-      row.given_name.toLowerCase().includes(search)
-    ).forEach(row => {
-      const li = document.createElement('li');
-      li.textContent = `${row.given_name} ${row.surname} — ${row.event}, ${row.year}, ${row.parish}, ${row.place}`;
-      resultsEl.appendChild(li);
-    });
+  data.filter(row => row.surname && row.surname.toLowerCase() === surname.toLowerCase())
+      .forEach(row => {
+        const li = document.createElement('li');
+        li.textContent = `${row.given_name} ${row.surname} — ${row.event}, ${row.year}, ${row.parish}, ${row.place}`;
+        resultsEl.appendChild(li);
+      });
+}
+
+// Auto-suggestions
+document.getElementById('searchInput').addEventListener('input', function() {
+  const input = this.value.toLowerCase();
+  const suggestionsEl = document.getElementById('suggestions');
+  suggestionsEl.innerHTML = '';
+  if (!input) return;
+
+  uniqueSurnames.filter(s => s.toLowerCase().startsWith(input))
+      .forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        li.addEventListener('click', () => {
+          document.getElementById('searchInput').value = s;
+          suggestionsEl.innerHTML = '';
+          showResults(s);
+        });
+        suggestionsEl.appendChild(li);
+      });
 });
 </script>
 
