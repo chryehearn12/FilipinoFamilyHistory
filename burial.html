@@ -63,8 +63,8 @@
     <table id="resultsTable">
       <thead>
         <tr>
-          <th>Given Name</th>
           <th>Surname</th>
+          <th>Given name</th>
           <th>Father</th>
           <th>Year</th>
           <th>Parish</th>
@@ -129,7 +129,7 @@ function renderTable(rows){
   }
   rows.forEach(r=>{
     const tr=document.createElement('tr');
-    ['given_name','surname','father','year','parish','place'].forEach(k=>{
+    ['surname','given_name','father','year','parish','place'].forEach(k=>{
       const td=document.createElement('td');
       td.textContent=r[k]||'';
       tr.appendChild(td);
