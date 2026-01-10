@@ -1,4 +1,4 @@
-given_name,surname,event,year,parish,place
-Gabriel,Tejamo,Baptism,1889,Alcantara,Cebu
-Fran,Smith,Baptism,1862,Alcantara,Cebu
-Abby,Brown,Baptism,1875,Cebu,"City, Cebu"
+surname,given_name,year,mother,father,parish,place
+Tomarong,Cornelio,1878,Donata,Francisco,Moalboal,Cebu
+Tomarong,Pacifico,1906,Tecla,Cornelio,Moalboal,Cebu
+Hernandez,Tecla,1876,Escolastica,Martin,Moalboal,Cebu
