@@ -4,10 +4,13 @@
   <title>Filipino Genealogy Search</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
-    input, button { padding: 5px; margin: 5px 0; }
-    ul { list-style: none; padding-left: 0; margin-top: 5px; }
-    li { margin: 3px 0; cursor: pointer; }
+    input { padding: 5px; margin: 5px 0; width: 300px; }
+    ul { list-style: none; padding-left: 0; margin-top: 0; border: 1px solid #ccc; max-width: 300px; }
+    li { padding: 3px; cursor: pointer; }
     li:hover { background-color: #eee; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
+    th { background-color: #f2f2f2; }
   </style>
 </head>
 <body>
@@ -16,28 +19,39 @@
 
 <input type="file" id="csvFile" accept=".csv">
 <br>
-<input type="text" id="searchInput" placeholder="Search by surname">
+<input type="text" id="searchInput" placeholder="Search by any column">
 <ul id="suggestions"></ul>
-<ul id="results"></ul>
+<table id="resultsTable" style="display:none;">
+  <thead>
+    <tr>
+      <th>Given Name</th>
+      <th>Surname</th>
+      <th>Event</th>
+      <th>Year</th>
+      <th>Parish</th>
+      <th>Place</th>
+    </tr>
+  </thead>
+  <tbody id="resultsBody"></tbody>
+</table>
 
-<!-- Include PapaParse library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
 let data = [];
-let uniqueSurnames = [];
+let suggestionsSet = new Set();
 
-// Clean CSV row: remove quotes and extra spaces
+// Clean CSV rows: remove quotes/spaces
 function cleanRow(row) {
   const clean = {};
   Object.keys(row).forEach(k => {
-    const key = k.trim().replace(/^"|"$/g,'');       // remove quotes from keys
+    const key = k.trim().replace(/^"|"$/g,'');
     const value = row[k] ? row[k].trim().replace(/^"|"$/g,'') : '';
     clean[key] = value;
   });
   return clean;
 }
 
-// Load CSV file
+// Load CSV
 document.getElementById('csvFile').addEventListener('change', function(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -46,38 +60,51 @@ document.getElementById('csvFile').addEventListener('change', function(e) {
     header: true,
     skipEmptyLines: true,
     complete: function(results) {
-      // Clean all rows and filter out any missing surnames
       data = results.data.map(cleanRow).filter(r => r.surname);
-      // Build unique surname list for suggestions
-      const surnames = data.map(r => r.surname);
-      uniqueSurnames = [...new Set(surnames)].sort((a,b)=>a.localeCompare(b));
-      document.getElementById('results').innerHTML = '';
+      // Build suggestions for all columns
+      suggestionsSet = new Set();
+      data.forEach(row => {
+        Object.values(row).forEach(val => {
+          if (val) suggestionsSet.add(val);
+        });
+      });
+      document.getElementById('resultsTable').style.display = 'table';
+      document.getElementById('resultsBody').innerHTML = '';
       document.getElementById('suggestions').innerHTML = '';
       alert(`CSV loaded! ${data.length} records ready to search.`);
     }
   });
 });
 
-// Show results for a surname
-function showResults(surname) {
-  const resultsEl = document.getElementById('results');
-  resultsEl.innerHTML = '';
-  data.filter(row => row.surname.toLowerCase() === surname.toLowerCase())
-      .forEach(row => {
-        const li = document.createElement('li');
-        li.textContent = `${row.given_name} ${row.surname} — ${row.event}, ${row.year}, ${row.parish}, ${row.place}`;
-        resultsEl.appendChild(li);
-      });
+// Show results in table
+function showResults(search) {
+  const tbody = document.getElementById('resultsBody');
+  tbody.innerHTML = '';
+  data.filter(row => 
+      Object.values(row).some(val => val.toLowerCase().includes(search.toLowerCase()))
+    ).forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.given_name}</td>
+        <td>${row.surname}</td>
+        <td>${row.event}</td>
+        <td>${row.year}</td>
+        <td>${row.parish}</td>
+        <td>${row.place}</td>
+      `;
+      tbody.appendChild(tr);
+    });
 }
 
-// Auto-suggest surnames
+// Auto-suggestions
 document.getElementById('searchInput').addEventListener('input', function() {
   const input = this.value.toLowerCase();
   const suggestionsEl = document.getElementById('suggestions');
   suggestionsEl.innerHTML = '';
   if (!input) return;
 
-  uniqueSurnames.filter(s => s.toLowerCase().startsWith(input))
+  Array.from(suggestionsSet).filter(s => s.toLowerCase().includes(input))
+      .slice(0, 10) // limit to 10 suggestions
       .forEach(s => {
         const li = document.createElement('li');
         li.textContent = s;
@@ -88,6 +115,11 @@ document.getElementById('searchInput').addEventListener('input', function() {
         });
         suggestionsEl.appendChild(li);
       });
+});
+
+// Update table as you type (optional live search)
+document.getElementById('searchInput').addEventListener('keyup', function(e){
+  showResults(this.value);
 });
 </script>
 
