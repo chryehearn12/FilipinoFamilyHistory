@@ -66,6 +66,7 @@
           <th>Surname</th>
           <th>Given name</th>
           <th>Father</th>
+          <th>Mother</th>          
           <th>Year</th>
           <th>Parish</th>
           <th>Place</th>
@@ -129,7 +130,7 @@ function renderTable(rows){
   }
   rows.forEach(r=>{
     const tr=document.createElement('tr');
-    ['surname','given_name','father','year','parish','place'].forEach(k=>{
+    ['surname','given_name','father','mother','year','parish','place'].forEach(k=>{
       const td=document.createElement('td');
       td.textContent=r[k]||'';
       tr.appendChild(td);
