@@ -1,0 +1,14 @@
+---
+layout: default
+---
+<article class="record">
+  <h2>{{ page.forename }} {{ page.surname }}</h2>
+  <p>
+    {% if page.church %}<strong>Church:</strong> {{ page.church }}{% endif %}
+    {% if page.place %} — {{ page.place }}{% endif %}
+    {% if page.year %} (<time datetime="{{ page.year }}">{{ page.year }}</time>){% endif %}
+  </p>
+  <div class="record-body">
+    {{ content }}
+  </div>
+</article>
