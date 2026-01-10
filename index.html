@@ -8,7 +8,7 @@
     ul { list-style: none; padding-left: 0; margin-top: 0; border: 1px solid #ccc; max-width: 300px; }
     li { padding: 3px; cursor: pointer; }
     li:hover { background-color: #eee; }
-    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; display:none; }
     th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
     th { background-color: #f2f2f2; }
   </style>
@@ -21,7 +21,7 @@
 <br>
 <input type="text" id="searchInput" placeholder="Search by any column">
 <ul id="suggestions"></ul>
-<table id="resultsTable" style="display:none;">
+<table id="resultsTable">
   <thead>
     <tr>
       <th>Given Name</th>
@@ -40,7 +40,7 @@
 let data = [];
 let suggestionsSet = new Set();
 
-// Clean CSV rows: remove quotes/spaces
+// Clean CSV rows
 function cleanRow(row) {
   const clean = {};
   Object.keys(row).forEach(k => {
@@ -61,16 +61,15 @@ document.getElementById('csvFile').addEventListener('change', function(e) {
     skipEmptyLines: true,
     complete: function(results) {
       data = results.data.map(cleanRow).filter(r => r.surname);
-      // Build suggestions for all columns
       suggestionsSet = new Set();
       data.forEach(row => {
         Object.values(row).forEach(val => {
           if (val) suggestionsSet.add(val);
         });
       });
-      document.getElementById('resultsTable').style.display = 'table';
       document.getElementById('resultsBody').innerHTML = '';
       document.getElementById('suggestions').innerHTML = '';
+      document.getElementById('resultsTable').style.display = 'none'; // hide table initially
       alert(`CSV loaded! ${data.length} records ready to search.`);
     }
   });
@@ -80,20 +79,35 @@ document.getElementById('csvFile').addEventListener('change', function(e) {
 function showResults(search) {
   const tbody = document.getElementById('resultsBody');
   tbody.innerHTML = '';
-  data.filter(row => 
-      Object.values(row).some(val => val.toLowerCase().includes(search.toLowerCase()))
-    ).forEach(row => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${row.given_name}</td>
-        <td>${row.surname}</td>
-        <td>${row.event}</td>
-        <td>${row.year}</td>
-        <td>${row.parish}</td>
-        <td>${row.place}</td>
-      `;
-      tbody.appendChild(tr);
-    });
+
+  if (!search) {
+    document.getElementById('resultsTable').style.display = 'none';
+    return;
+  }
+
+  const filtered = data.filter(row =>
+    Object.values(row).some(val => val.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  if (filtered.length === 0) {
+    document.getElementById('resultsTable').style.display = 'none';
+    return;
+  }
+
+  filtered.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${row.given_name}</td>
+      <td>${row.surname}</td>
+      <td>${row.event}</td>
+      <td>${row.year}</td>
+      <td>${row.parish}</td>
+      <td>${row.place}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('resultsTable').style.display = 'table';
 }
 
 // Auto-suggestions
@@ -101,27 +115,30 @@ document.getElementById('searchInput').addEventListener('input', function() {
   const input = this.value.toLowerCase();
   const suggestionsEl = document.getElementById('suggestions');
   suggestionsEl.innerHTML = '';
-  if (!input) return;
 
-  Array.from(suggestionsSet).filter(s => s.toLowerCase().includes(input))
-      .slice(0, 10) // limit to 10 suggestions
-      .forEach(s => {
-        const li = document.createElement('li');
-        li.textContent = s;
-        li.addEventListener('click', () => {
-          document.getElementById('searchInput').value = s;
-          suggestionsEl.innerHTML = '';
-          showResults(s);
-        });
-        suggestionsEl.appendChild(li);
+  if (!input) {
+    document.getElementById('resultsTable').style.display = 'none';
+    return;
+  }
+
+  Array.from(suggestionsSet)
+    .filter(s => s.toLowerCase().includes(input))
+    .slice(0, 10)
+    .forEach(s => {
+      const li = document.createElement('li');
+      li.textContent = s;
+      li.addEventListener('click', () => {
+        document.getElementById('searchInput').value = s;
+        suggestionsEl.innerHTML = '';
+        showResults(s);
       });
-});
+      suggestionsEl.appendChild(li);
+    });
 
-// Update table as you type (optional live search)
-document.getElementById('searchInput').addEventListener('keyup', function(e){
-  showResults(this.value);
+  showResults(input);
 });
 </script>
 
 </body>
 </html>
+
