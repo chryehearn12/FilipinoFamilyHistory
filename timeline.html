@@ -36,11 +36,12 @@
   /* Timeline container */
   .timeline-container {
     width: 100%;
-    max-width: 700px;
-    overflow: hidden;  /* prevent overlap */
+    max-width: 800px;  /* slightly wider to accommodate long text */
+    overflow: visible;  /* allow full visibility of event boxes */
     position: relative;
     margin: 60px auto;
-    padding-top: 160px; /* space for tall event boxes */
+    padding-top: 120px;   /* space for event boxes */
+    padding-bottom: 80px; /* space below slider */
   }
 
   /* Timeline line */
@@ -56,24 +57,24 @@
   /* Event boxes */
   .event {
     position: absolute;
-    top: -140px; /* move box high enough above timeline to avoid slider */
+    top: -70px; /* position above timeline */
     transform: translateY(0);
     background: #ff4c4c; /* red initially, changes to green */
     color: white;
     padding: 8px 12px;
     border-radius: 5px;
-    white-space: normal;
+    white-space: nowrap; /* prevent wrapping */
     text-align: center;
-    max-width: 220px;
+    max-width: 400px; /* allow longer text to go horizontally */
     line-height: 1.3em;
   }
 
   .event-desc {
     font-size: 12px;
-    color: white; /* matches box */
+    color: white; /* same as box */
     margin-top: 4px;
     display: block;
-    word-wrap: break-word;
+    word-wrap: normal;
   }
 
   /* Slider */
@@ -88,8 +89,8 @@
     .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
     .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
     .sidebar a:last-child{border-right:none;}
-    .timeline-container{max-width:95%; padding-top:180px;}
-    .event{top:-160px;}
+    .timeline-container{max-width:95%; padding-top:140px; padding-bottom:60px;}
+    .event{top:-90px; max-width:250px;} /* narrower on small screens */
   }
 </style>
 </head>
