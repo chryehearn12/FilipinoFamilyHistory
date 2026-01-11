@@ -135,7 +135,7 @@ function renderTable(rows){
   }
   rows.forEach(r=>{
     const tr=document.createElement('tr');
-    ['surname','given name','year','parish','place','note'].forEach(k=>{
+    ['surname','given_name','year','parish','place','note'].forEach(k=>{
       const td=document.createElement('td');
       td.textContent=r[k]||'';
       tr.appendChild(td);
