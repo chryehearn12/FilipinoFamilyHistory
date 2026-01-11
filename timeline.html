@@ -4,102 +4,99 @@
 <meta charset="UTF-8">
 <title>Timeline - Filipino Genealogy</title>
 <style>
-  body { margin:0; font-family:Arial; background:#f7f7f7; }
+body { margin:0; font-family:Arial; background:#f7f7f7; }
 
-  /* Wrapper and layout */
-  .wrapper{display:flex; min-height:100vh;}
-  .sidebar{
-    width:220px;
-    background:#d32f2f;
-    color:white;
-    flex-shrink:0;
-    display:flex;
-    flex-direction:column;
-    padding-top:20px;
-  }
-  .sidebar h2{text-align:center; margin-bottom:20px; font-size:18px;}
-  .sidebar a{
-    padding:12px 20px; display:block; color:white;
-    border-bottom:1px solid rgba(255,255,255,0.1);
-    text-decoration:none;
-  }
-  .sidebar a:hover{background:#b71c1c;}
+.wrapper{display:flex; min-height:100vh;}
+.sidebar{
+  width:220px;
+  background:#d32f2f;
+  color:white;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  padding-top:20px;
+}
+.sidebar h2{text-align:center; margin-bottom:20px; font-size:18px;}
+.sidebar a{
+  padding:12px 20px; display:block; color:white;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  text-decoration:none;
+}
+.sidebar a:hover{background:#b71c1c;}
 
-  .main{
-    flex:1;
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-  }
+.main{
+  flex:1;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
 
-  /* Timeline container */
-  .timeline-container {
-    width: 100%;
-    max-width: 800px;
-    overflow: visible;
-    position: relative;
-    margin: 60px auto;
-    padding-top: 120px;
-    padding-bottom: 80px;
-  }
+/* Timeline container */
+.timeline-container {
+  width: 100%;
+  max-width: 800px;
+  overflow: hidden;  /* clip content outside */
+  position: relative;
+  margin: 60px auto;
+  padding-top: 120px;
+  padding-bottom: 80px;
+}
 
-  /* Timeline line */
-  .timeline {
-    position: relative;
-    height: 8px;
-    background: #eee;
-    border-radius: 4px;
-    white-space: nowrap;
-    transition: transform 0.5s;
-  }
+/* Timeline line */
+.timeline {
+  position: relative;
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: transform 0.5s;
+}
 
-  /* Event boxes */
-  .event {
-    position: absolute;
-    top: -70px;
-    transform: translateY(0);
-    background: #ff4c4c;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 5px;
-    white-space: nowrap;
-    text-align: center;
-    max-width: 400px;
-    line-height: 1.3em;
-  }
+/* Event boxes */
+.event {
+  position: absolute;
+  top: -70px;
+  transform: translateY(0);
+  background: #ff4c4c;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  white-space: nowrap;
+  text-align: center;
+  max-width: 400px;
+  line-height: 1.3em;
+}
 
-  .event-desc {
-    font-size: 12px;
-    color: white;
-    margin-top: 4px;
-    display: block;
-    word-wrap: normal;
-  }
+.event-desc {
+  font-size: 12px;
+  color: white;
+  margin-top: 4px;
+  display: block;
+  word-wrap: normal;
+}
 
-  /* Next button */
-  #nextBtn {
-    margin-top: 40px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background: #d32f2f;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+/* Buttons */
+button {
+  margin-top: 40px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:hover { background: #b71c1c; }
 
-  #nextBtn:hover { background: #b71c1c; }
-
-  /* Responsive */
-  @media(max-width:768px){
-    .wrapper{flex-direction:column;}
-    .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
-    .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
-    .sidebar a:last-child{border-right:none;}
-    .timeline-container{max-width:95%; padding-top:140px; padding-bottom:60px;}
-    .event{top:-90px; max-width:250px;}
-  }
+@media(max-width:768px){
+  .wrapper{flex-direction:column;}
+  .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
+  .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
+  .sidebar a:last-child{border-right:none;}
+  .timeline-container{max-width:95%; padding-top:140px; padding-bottom:60px;}
+  .event{top:-90px; max-width:250px;}
+}
 </style>
 </head>
 <body>
@@ -137,36 +134,54 @@
           </div>
         </div>
       </div>
-      <button id="nextBtn">Next Event</button>
+      <div>
+        <button id="prevBtn">Previous Event</button>
+        <button id="nextBtn">Next Event</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  const timeline = document.getElementById('timeline');
-  const events = document.querySelectorAll('.event');
-  const nextBtn = document.getElementById('nextBtn');
+const timeline = document.getElementById('timeline');
+const events = document.querySelectorAll('.event');
+const nextBtn = document.getElementById('nextBtn');
+const prevBtn = document.getElementById('prevBtn');
 
-  let currentIndex = -1; // start before first event
+let currentIndex = -1; // before first
 
-  nextBtn.addEventListener('click', () => {
-    if (currentIndex < events.length - 1) {
-      currentIndex++;
-      const event = events[currentIndex];
-      const leftPercent = parseFloat(event.style.left);
-      // move timeline so event is visible
-      timeline.style.transform = `translateX(-${leftPercent}%)`;
+function moveTimeline(index){
+  if(index < 0) index = 0;
+  if(index >= events.length) index = events.length - 1;
 
-      // highlight events up to current
-      events.forEach((ev, idx) => {
-        if (idx <= currentIndex) {
-          ev.style.background = '#4CAF50'; // green
-        } else {
-          ev.style.background = '#ff4c4c'; // red
-        }
-      });
-    }
+  const event = events[index];
+  const leftPercent = parseFloat(event.style.left);
+
+  // calculate offset to avoid sidebar overlap (220px)
+  const offset = 220; // sidebar width in px
+  const timelineWidth = timeline.parentElement.offsetWidth;
+  const translateX = (timelineWidth - offset) * leftPercent/100 - offset;
+  timeline.style.transform = `translateX(-${leftPercent}%)`;
+
+  // highlight events
+  events.forEach((ev, idx) => {
+    ev.style.background = (idx <= index) ? '#4CAF50' : '#ff4c4c';
   });
+}
+
+nextBtn.addEventListener('click', ()=>{
+  if(currentIndex < events.length - 1){
+    currentIndex++;
+    moveTimeline(currentIndex);
+  }
+});
+
+prevBtn.addEventListener('click', ()=>{
+  if(currentIndex > 0){
+    currentIndex--;
+    moveTimeline(currentIndex);
+  }
+});
 </script>
 
 </body>
