@@ -7,6 +7,8 @@
 body { margin:0; font-family:Arial; background:#f7f7f7; }
 
 .wrapper{display:flex; min-height:100vh;}
+
+/* Sidebar */
 .sidebar{
   width:220px;
   background:#d32f2f;
@@ -15,6 +17,13 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   display:flex;
   flex-direction:column;
   padding-top:20px;
+  align-items:center;
+}
+.sidebar-image img {
+  width: 80%;
+  border-radius: 50%;
+  display:block;
+  margin-bottom:10px;
 }
 .sidebar h2{text-align:center; margin-bottom:20px; font-size:18px;}
 .sidebar a{
@@ -24,6 +33,7 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
 }
 .sidebar a:hover{background:#b71c1c;}
 
+/* Main content */
 .main{
   flex:1;
   padding:20px;
@@ -36,7 +46,7 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
 .timeline-container {
   width: 100%;
   max-width: 800px;
-  overflow: hidden;  /* clip content outside */
+  overflow: visible;
   position: relative;
   margin: 60px auto;
   padding-top: 120px;
@@ -76,22 +86,30 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   word-wrap: normal;
 }
 
-/* Buttons */
-button {
+/* Arrow buttons */
+.timeline-controls {
   margin-top: 40px;
+}
+
+.timeline-controls button {
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 24px;
   background: #d32f2f;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 0 10px;
 }
-button:hover { background: #b71c1c; }
 
+.timeline-controls button:hover {
+  background: #b71c1c;
+}
+
+/* Responsive */
 @media(max-width:768px){
   .wrapper{flex-direction:column;}
-  .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
+  .sidebar{width:100%; flex-direction:row; overflow-x:auto; align-items:center;}
   .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
   .sidebar a:last-child{border-right:none;}
   .timeline-container{max-width:95%; padding-top:140px; padding-bottom:60px;}
@@ -104,6 +122,9 @@ button:hover { background: #b71c1c; }
 <div class="wrapper">
   <!-- Sidebar -->
   <div class="sidebar">
+    <div class="sidebar-image">
+      <img src="your-image.jpg" alt="Sidebar Image">
+    </div>
     <h2>Menu</h2>
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
@@ -134,9 +155,11 @@ button:hover { background: #b71c1c; }
           </div>
         </div>
       </div>
-      <div>
-        <button id="prevBtn">Previous Event</button>
-        <button id="nextBtn">Next Event</button>
+
+      <!-- Arrow buttons -->
+      <div class="timeline-controls">
+        <button id="prevBtn">&larr;</button>
+        <button id="nextBtn">&rarr;</button>
       </div>
     </div>
   </div>
@@ -157,10 +180,7 @@ function moveTimeline(index){
   const event = events[index];
   const leftPercent = parseFloat(event.style.left);
 
-  // calculate offset to avoid sidebar overlap (220px)
-  const offset = 220; // sidebar width in px
-  const timelineWidth = timeline.parentElement.offsetWidth;
-  const translateX = (timelineWidth - offset) * leftPercent/100 - offset;
+  // move timeline (translateX by %)
   timeline.style.transform = `translateX(-${leftPercent}%)`;
 
   // highlight events
@@ -169,6 +189,7 @@ function moveTimeline(index){
   });
 }
 
+// Next arrow
 nextBtn.addEventListener('click', ()=>{
   if(currentIndex < events.length - 1){
     currentIndex++;
@@ -176,6 +197,7 @@ nextBtn.addEventListener('click', ()=>{
   }
 });
 
+// Previous arrow
 prevBtn.addEventListener('click', ()=>{
   if(currentIndex > 0){
     currentIndex--;
