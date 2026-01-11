@@ -1,4 +1,5 @@
-given_name,surname,event,year,parish,place
-Gabriel,Tejamo,Confirmation,1889,Alcantara,Cebu
-Fran,Smith,Confirmation,1862,Alcantara,Cebu
-Abby,Brown,Confirmation,1875,Cebu,"City, Cebu"
+surname,given_name,father,mother,year,parish,place
+Redoble,Agustin,Mogino,Brigida,1853,Moalboal,Cebu
+Dorimon,Cattalino,Eusebio,Crisanta,1853,Moalboal,Cebu
+Abrenica,Juan,Agustin,Beranica,1853,Moalboal,Cebu
+Taconda,Benancio,Tomaseno,Orilla,1853,Moalboal,Cebu
