@@ -36,12 +36,12 @@
   /* Timeline container */
   .timeline-container {
     width: 100%;
-    max-width: 800px;  /* slightly wider to accommodate long text */
-    overflow: visible;  /* allow full visibility of event boxes */
+    max-width: 800px;
+    overflow: visible;
     position: relative;
     margin: 60px auto;
-    padding-top: 120px;   /* space for event boxes */
-    padding-bottom: 80px; /* space below slider */
+    padding-top: 120px;
+    padding-bottom: 80px;
   }
 
   /* Timeline line */
@@ -51,37 +51,45 @@
     background: #eee;
     border-radius: 4px;
     white-space: nowrap;
-    transition: transform 0.3s;
+    transition: transform 0.5s;
   }
 
   /* Event boxes */
   .event {
     position: absolute;
-    top: -70px; /* position above timeline */
+    top: -70px;
     transform: translateY(0);
-    background: #ff4c4c; /* red initially, changes to green */
+    background: #ff4c4c;
     color: white;
     padding: 8px 12px;
     border-radius: 5px;
-    white-space: nowrap; /* prevent wrapping */
+    white-space: nowrap;
     text-align: center;
-    max-width: 400px; /* allow longer text to go horizontally */
+    max-width: 400px;
     line-height: 1.3em;
   }
 
   .event-desc {
     font-size: 12px;
-    color: white; /* same as box */
+    color: white;
     margin-top: 4px;
     display: block;
     word-wrap: normal;
   }
 
-  /* Slider */
-  #slider {
-    width: 100%;
-    margin-top: 20px;
+  /* Next button */
+  #nextBtn {
+    margin-top: 40px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
   }
+
+  #nextBtn:hover { background: #b71c1c; }
 
   /* Responsive */
   @media(max-width:768px){
@@ -90,7 +98,7 @@
     .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
     .sidebar a:last-child{border-right:none;}
     .timeline-container{max-width:95%; padding-top:140px; padding-bottom:60px;}
-    .event{top:-90px; max-width:250px;} /* narrower on small screens */
+    .event{top:-90px; max-width:250px;}
   }
 </style>
 </head>
@@ -129,28 +137,35 @@
           </div>
         </div>
       </div>
-      <input type="range" id="slider" min="0" max="100" value="0">
+      <button id="nextBtn">Next Event</button>
     </div>
   </div>
 </div>
 
 <script>
-  const slider = document.getElementById('slider');
   const timeline = document.getElementById('timeline');
   const events = document.querySelectorAll('.event');
+  const nextBtn = document.getElementById('nextBtn');
 
-  slider.addEventListener('input', () => {
-    const value = slider.value; // 0 to 100
-    timeline.style.transform = `translateX(-${value}%)`;
+  let currentIndex = -1; // start before first event
 
-    events.forEach(event => {
-      const eventLeft = parseFloat(event.style.left);
-      if (eventLeft <= value) {
-        event.style.background = '#4CAF50'; // passed
-      } else {
-        event.style.background = '#ff4c4c'; // upcoming
-      }
-    });
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < events.length - 1) {
+      currentIndex++;
+      const event = events[currentIndex];
+      const leftPercent = parseFloat(event.style.left);
+      // move timeline so event is visible
+      timeline.style.transform = `translateX(-${leftPercent}%)`;
+
+      // highlight events up to current
+      events.forEach((ev, idx) => {
+        if (idx <= currentIndex) {
+          ev.style.background = '#4CAF50'; // green
+        } else {
+          ev.style.background = '#ff4c4c'; // red
+        }
+      });
+    }
   });
 </script>
 
