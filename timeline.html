@@ -36,7 +36,7 @@
   /* Timeline container */
   .timeline-container {
     width: 100%;
-    max-width: 700px; /* timeline width */
+    max-width: 700px;
     overflow: hidden;  /* prevent overlap */
     position: relative;
     margin: 60px auto; /* center in page vertically */
@@ -46,7 +46,7 @@
   /* Timeline line */
   .timeline {
     position: relative;
-    height: 8px; /* line thickness */
+    height: 8px;
     background: #eee;
     border-radius: 4px;
     white-space: nowrap;
@@ -56,34 +56,30 @@
   /* Event boxes */
   .event {
     position: absolute;
-    top: -50px; /* place event above line */
+    top: -70px; /* adjust so box sits above line */
     transform: translateY(0);
-    background: #ff4c4c;
+    background: #ff4c4c; /* red initially, changes to green */
     color: white;
-    padding: 5px 10px;
+    padding: 8px 12px;
     border-radius: 5px;
-    white-space: nowrap;
-    transition: background 0.3s;
+    white-space: normal;
     text-align: center;
+    max-width: 220px;
+    line-height: 1.3em;
   }
 
-  /* Event descriptions */
   .event-desc {
     font-size: 12px;
-    color: #000;
-    background: #fff;
-    padding: 4px 6px;
-    border-radius: 4px;
-    margin-top: 5px;
+    color: white; /* matches box */
+    margin-top: 4px;
     display: block;
-    max-width: 220px;
     word-wrap: break-word;
   }
 
   /* Slider */
   #slider {
     width: 100%;
-    margin-top: 100px;
+    margin-top: 120px;
   }
 
   /* Responsive */
@@ -92,8 +88,8 @@
     .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
     .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
     .sidebar a:last-child{border-right:none;}
-    .timeline-container{max-width:95%; padding-top:70px;}
-    .event{top:-60px;}
+    .timeline-container{max-width:95%; padding-top:80px;}
+    .event{top:-80px;}
   }
 </style>
 </head>
@@ -121,11 +117,15 @@
       <div class="timeline" id="timeline">
         <div class="event" style="left:0%">
           1521: Ferdinand Magellan
-          <div class="event-desc">The Battle of Mactan was fought on the beach between Spanish forces led by Ferdinand and Lapulapu.</div>
+          <div class="event-desc">
+            The Battle of Mactan was fought on the beach between Spanish forces led by Ferdinand and Lapulapu.
+          </div>
         </div>
         <div class="event" style="left:100%">
           1849: Claveria Decree
-          <div class="event-desc">The Spaniards issued the Claveria Decree in 1849 in an attempt to assign all Filipino surnames.</div>
+          <div class="event-desc">
+            The Spaniards issued the Claveria Decree in 1849 in an attempt to assign all Filipino surnames.
+          </div>
         </div>
       </div>
       <input type="range" id="slider" min="0" max="100" value="0">
@@ -145,9 +145,9 @@
     events.forEach(event => {
       const eventLeft = parseFloat(event.style.left);
       if (eventLeft <= value) {
-        event.style.background = '#4CAF50';
+        event.style.background = '#4CAF50'; // passed
       } else {
-        event.style.background = '#ff4c4c';
+        event.style.background = '#ff4c4c'; // upcoming
       }
     });
   });
