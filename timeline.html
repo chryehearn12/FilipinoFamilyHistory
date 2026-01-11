@@ -34,28 +34,31 @@
       align-items:center;
     }
 
-    /* Timeline styles */
+    /* Timeline container */
     .timeline-container {
       width: 100%;
-      max-width: 800px; /* keeps timeline inside main */
-      overflow: hidden;  /* prevents gray bar spilling */
+      max-width: 800px;
+      overflow: visible;  /* allow events to be fully visible */
       position: relative;
       margin-top: 30px;
+      padding-top: 40px; /* space for event boxes above timeline line */
     }
 
+    /* Timeline line */
     .timeline {
       position: relative;
-      height: 8px;
+      height: 8px; /* line thickness */
       background: #eee;
       border-radius: 4px;
       white-space: nowrap;
       transition: transform 0.3s;
     }
 
+    /* Event boxes */
     .event {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+      top: -30px; /* place event text above the line */
+      transform: translateY(0);
       background: #ff4c4c;
       color: white;
       padding: 5px 10px;
@@ -64,9 +67,10 @@
       transition: background 0.3s;
     }
 
+    /* Slider */
     #slider {
       width: 100%;
-      margin-top: 40px;
+      margin-top: 60px;
     }
 
     /* Responsive */
@@ -75,7 +79,8 @@
       .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
       .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
       .sidebar a:last-child{border-right:none;}
-      .timeline-container{width:95%;}
+      .timeline-container{width:95%; padding-top:50px;}
+      .event{top:-35px;}
     }
   </style>
 </head>
@@ -124,7 +129,7 @@
     events.forEach(event => {
       const eventLeft = parseFloat(event.style.left);
       if (eventLeft <= value) {
-        event.style.background = '#4CAF50'; // passed
+        event.style.background = '#4CAF50'; // reached
       } else {
         event.style.background = '#ff4c4c'; // upcoming
       }
