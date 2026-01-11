@@ -15,18 +15,9 @@
       flex-shrink:0;
       display:flex;
       flex-direction:column;
-      align-items:center; /* center everything inside */
+      align-items:center; /* center menu items */
       padding-top:20px;
       box-sizing: border-box;
-    }
-
-    /* Sidebar image */
-    .sidebar-image img {
-      max-width: 80%;      /* fits sidebar width */
-      height: auto;         /* maintain aspect ratio */
-      display: block;
-      margin-bottom: 15px;
-      border-radius: 50%;   /* optional: circular image */
     }
 
     .sidebar h2{
@@ -61,7 +52,6 @@
       .sidebar{width:100%; flex-direction:row; overflow-x:auto; align-items:center;}
       .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
       .sidebar a:last-child{border-right:none;}
-      .sidebar-image img{max-width:50px; margin:0 10px 0 10px;}
     }
   </style>
 </head>
@@ -69,11 +59,6 @@
 <div class="wrapper">
   <!-- Sidebar -->
   <div class="sidebar">
-    <!-- Sidebar Image -->
-    <div class="sidebar-image">
-      <img src="your-image.jpg" alt="Sidebar Image">
-    </div>
-
     <h2>Menu</h2>
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
