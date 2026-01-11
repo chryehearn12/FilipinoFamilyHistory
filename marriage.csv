@@ -1,4 +1,7 @@
-given_name,surname,event,year,parish,place
-Gabriel,Tejamo,Marriage,1889,Alcantara,Cebu
-Fran,Smith,Marriage,1862,Alcantara,Cebu
-Abby,Brown,Marriage,1875,Cebu,"City, Cebu"
+surname,given_name,spouse,year,parish,place
+Amorado,Juanzo,Albares,1922,Alcantara,Cebu
+Ugbamen,Sotero,Tumasa,1922,Alcantara,Cebu
+Lamosao,Zuflo,Igotigot,1922,Alcantara,Cebu
+Lacaste,Melecio,Isugan,1922,Alcantara,Cebu
+Lambo,Maximo,Renegade,1922,Alcantara,Cebu
+Lapenoso,Gaudencio,Yosores,1922,Alcantara,Cebu
