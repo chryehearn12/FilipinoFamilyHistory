@@ -2,46 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Historical Timeline</title>
+  <title>Timeline - Filipino Genealogy</title>
   <style>
-    /* Page layout */
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
+    /* Base styles */
+    body { margin:0; font-family:Arial; background:#f7f7f7; }
+    
+    /* Wrapper and layout */
+    .wrapper{display:flex; min-height:100vh;}
+    .sidebar{
+      width:220px;
+      background:#d32f2f;
+      color:white;
+      flex-shrink:0;
+      display:flex;
+      flex-direction:column;
+      padding-top:20px;
     }
-
-    /* Sidebar */
-    .sidebar {
-      width: 200px;
-      background: #333;
-      color: white;
-      padding: 20px;
-      position: sticky; /* stays visible */
-      top: 0;
-      height: 100vh;
+    .sidebar h2{text-align:center; margin-bottom:20px; font-size:18px;}
+    .sidebar a{
+      padding:12px 20px; display:block; color:white;
+      border-bottom:1px solid rgba(255,255,255,0.1);
+      text-decoration:none;
     }
-
-    /* Main content */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: #f9f9f9;
-      padding: 20px;
-      overflow: hidden;
+    .sidebar a:hover{background:#b71c1c;}
+    
+    .main{
+      flex:1;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
     }
-
+    
     /* Timeline container */
     .timeline-container {
-      width: 80%;
-      position: relative;
-      margin-top: 50px;
+      width:80%;
+      margin-top:30px;
     }
 
     .timeline {
@@ -54,7 +50,6 @@
       transition: transform 0.3s;
     }
 
-    /* Timeline events */
     .event {
       position: absolute;
       top: 50%;
@@ -67,20 +62,36 @@
       transition: background 0.3s;
     }
 
-    /* Slider */
     #slider {
       width: 100%;
       margin-top: 30px;
+    }
+
+    /* Responsive */
+    @media(max-width:768px){
+      .wrapper{flex-direction:column;}
+      .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
+      .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
+      .sidebar a:last-child{border-right:none;}
+      .timeline-container{width:95%;}
     }
   </style>
 </head>
 <body>
 
+<div class="wrapper">
   <!-- Sidebar -->
   <div class="sidebar">
-    <h2>Sidebar</h2>
-    <p>This stays visible while dragging the timeline.</p>
-    <p>You can add navigation links or info here.</p>
+    <h2>Menu</h2>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="baptism.html">Baptism Records</a>
+    <a href="confirmation.html">Confirmation Records</a>
+    <a href="marriage.html">Marriage Records</a>
+    <a href="death.html">Death Records</a>
+    <a href="burial.html">Burial Records</a>
+    <a href="timeline.html">Timeline</a>
+    <a href="contact.html">Contact</a>
   </div>
 
   <!-- Main content -->
@@ -94,28 +105,30 @@
       <input type="range" id="slider" min="0" max="100" value="0">
     </div>
   </div>
+</div>
 
-  <!-- JavaScript -->
-  <script>
-    const slider = document.getElementById('slider');
-    const timeline = document.getElementById('timeline');
-    const events = document.querySelectorAll('.event');
+<!-- JavaScript -->
+<script>
+  const slider = document.getElementById('slider');
+  const timeline = document.getElementById('timeline');
+  const events = document.querySelectorAll('.event');
 
-    slider.addEventListener('input', () => {
-      const value = slider.value; // 0 to 100
-      // Move timeline based on slider
-      timeline.style.transform = `translateX(-${value}%)`;
+  slider.addEventListener('input', () => {
+    const value = slider.value; // 0 to 100
+    // Move timeline based on slider
+    timeline.style.transform = `translateX(-${value}%)`;
 
-      // Highlight events
-      events.forEach(event => {
-        const eventLeft = parseFloat(event.style.left);
-        if (eventLeft <= value) {
-          event.style.background = '#4CAF50'; // passed
-        } else {
-          event.style.background = '#ff4c4c'; // upcoming
-        }
-      });
+    // Highlight events
+    events.forEach(event => {
+      const eventLeft = parseFloat(event.style.left);
+      if (eventLeft <= value) {
+        event.style.background = '#4CAF50'; // reached
+      } else {
+        event.style.background = '#ff4c4c'; // upcoming
+      }
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
