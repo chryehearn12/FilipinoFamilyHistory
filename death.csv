@@ -1,4 +1,6 @@
-given_name,surname,event,year,parish,place
-Gabriel,Tejamo,Death,1889,Alcantara,Cebu
-Fran,Smith,Death,1862,Alcantara,Cebu
-Abby,Brown,Death,1875,Cebu,"City, Cebu"
+surname,given_name,year,parish,place,note
+Sabello,Bugenia,1922,Alcantara,Cebu,"congenital, debility"
+Iginbiga,Aquelina,1922,Alcantara,Cebu,"diarrhea, entitis"
+Tumnaodes,Operina,1922,Alcantara,Cebu,"acute, bronchitis"
+Nacion,Helarion,1922,Alcantara,Cebu,tuberculosis
+Gabia,Roman,1922,Alcantara,Cebu,"diarrhea, enteritis"
