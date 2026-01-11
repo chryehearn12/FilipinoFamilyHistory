@@ -40,70 +40,67 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   display:flex;
   flex-direction:column;
   align-items:center;
-}
-
-/* Timeline container */
-.timeline-container {
-  width: 100%;
-  max-width: 800px;
-  overflow: visible;
   position: relative;
-  margin: 60px auto;
-  padding-top: 120px;
-  padding-bottom: 80px;
+  overflow: hidden;
+  min-height:200px;
 }
 
-/* Timeline line */
-.timeline {
-  position: relative;
-  height: 8px;
-  background: #eee;
-  border-radius: 4px;
-  white-space: nowrap;
-  transition: transform 0.5s;
+/* Event box wrapper */
+.event-wrapper {
+  display: flex;
+  transition: transform 0.5s ease;
 }
 
-/* Event boxes */
+/* Event box */
 .event {
-  position: absolute;
-  top: -70px;
-  transform: translateY(0);
-  background: #ff4c4c;
+  min-width: 100%;
+  background: #4CAF50;
   color: white;
-  padding: 8px 12px;
-  border-radius: 5px;
-  white-space: nowrap;
+  padding: 16px 20px;
+  border-radius: 8px;
   text-align: center;
-  max-width: 400px;
-  line-height: 1.3em;
+  line-height: 1.4em;
+  flex-shrink: 0;
 }
 
 .event-desc {
-  font-size: 12px;
+  font-size: 14px;
   color: white;
-  margin-top: 4px;
+  margin-top: 8px;
   display: block;
-  word-wrap: normal;
 }
 
-/* Arrow buttons */
+/* Carousel arrows */
 .timeline-controls {
-  margin-top: 40px;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none; /* allow event box interaction */
 }
 
 .timeline-controls button {
-  padding: 10px 20px;
-  font-size: 24px;
-  background: #d32f2f;
+  pointer-events: all; /* allow click */
+  background: rgba(211, 47, 47, 0.7);
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 50%;
+  font-size: 28px;
+  width: 50px;
+  height: 50px;
   cursor: pointer;
-  margin: 0 10px;
+  transition: background 0.3s;
 }
 
 .timeline-controls button:hover {
-  background: #b71c1c;
+  background: rgba(183, 28, 28, 0.9);
+}
+
+.timeline-controls button:disabled {
+  background: rgba(0,0,0,0.2);
+  cursor: default;
 }
 
 /* Responsive */
@@ -112,8 +109,8 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   .sidebar{width:100%; flex-direction:row; overflow-x:auto; align-items:center;}
   .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
   .sidebar a:last-child{border-right:none;}
-  .timeline-container{max-width:95%; padding-top:140px; padding-bottom:60px;}
-  .event{top:-90px; max-width:250px;}
+  .event{max-width:90%;}
+  .timeline-controls button{width:40px; height:40px; font-size:22px;}
 }
 </style>
 </head>
@@ -140,70 +137,64 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   <!-- Main content -->
   <div class="main">
     <h1>Historical Timeline</h1>
-    <div class="timeline-container">
-      <div class="timeline" id="timeline">
-        <div class="event" style="left:0%">
-          1521: Ferdinand Magellan
-          <div class="event-desc">
-            The Battle of Mactan was fought on the beach between Spanish forces led by Ferdinand and Lapulapu.
-          </div>
-        </div>
-        <div class="event" style="left:100%">
-          1849: Claveria Decree
-          <div class="event-desc">
-            The Spaniards issued the Claveria Decree in 1849 in an attempt to assign all Filipino surnames.
-          </div>
-        </div>
-      </div>
 
-      <!-- Arrow buttons -->
-      <div class="timeline-controls">
-        <button id="prevBtn">&larr;</button>
-        <button id="nextBtn">&rarr;</button>
+    <div class="event-wrapper" id="eventWrapper">
+      <div class="event">
+        1521: Ferdinand Magellan
+        <div class="event-desc">
+          The Battle of Mactan was fought on the beach between Spanish forces led by Ferdinand and Lapulapu.
+        </div>
       </div>
+      <div class="event">
+        1849: Claveria Decree
+        <div class="event-desc">
+          The Spaniards issued the Claveria Decree in 1849 in an attempt to assign all Filipino surnames.
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-controls">
+      <button id="prevBtn">&larr;</button>
+      <button id="nextBtn">&rarr;</button>
     </div>
   </div>
 </div>
 
 <script>
-const timeline = document.getElementById('timeline');
+const eventWrapper = document.getElementById('eventWrapper');
 const events = document.querySelectorAll('.event');
 const nextBtn = document.getElementById('nextBtn');
 const prevBtn = document.getElementById('prevBtn');
 
-let currentIndex = -1; // before first
+let currentIndex = 0;
 
-function moveTimeline(index){
-  if(index < 0) index = 0;
-  if(index >= events.length) index = events.length - 1;
+function updateCarousel() {
+  const offset = -currentIndex * 100; // slide by 100% width
+  eventWrapper.style.transform = `translateX(${offset}%)`;
 
-  const event = events[index];
-  const leftPercent = parseFloat(event.style.left);
-
-  // move timeline (translateX by %)
-  timeline.style.transform = `translateX(-${leftPercent}%)`;
-
-  // highlight events
-  events.forEach((ev, idx) => {
-    ev.style.background = (idx <= index) ? '#4CAF50' : '#ff4c4c';
-  });
+  // disable arrows at ends
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = currentIndex === events.length - 1;
 }
 
-// Next arrow
-nextBtn.addEventListener('click', ()=>{
+// Next
+nextBtn.addEventListener('click', () => {
   if(currentIndex < events.length - 1){
     currentIndex++;
-    moveTimeline(currentIndex);
+    updateCarousel();
   }
 });
 
-// Previous arrow
-prevBtn.addEventListener('click', ()=>{
+// Previous
+prevBtn.addEventListener('click', () => {
   if(currentIndex > 0){
     currentIndex--;
-    moveTimeline(currentIndex);
+    updateCarousel();
   }
 });
+
+// initialize
+updateCarousel();
 </script>
 
 </body>
