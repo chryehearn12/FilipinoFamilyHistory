@@ -3,69 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timeline Slider</title>
+  <title>Historical Timeline</title>
   <style>
-.timeline-container {
-  width: 80%;
-  margin: 50px auto;
-  position: relative;
-}
+    /* Page layout */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-.timeline {
-  position: relative;
-  height: 60px;
-  background: #eee;
-  border-radius: 30px;
-  overflow: hidden;
-}
+    /* Sidebar */
+    .sidebar {
+      width: 200px;
+      background: #333;
+      color: white;
+      padding: 20px;
+      position: sticky; /* stays visible */
+      top: 0;
+      height: 100vh;
+    }
 
-.event {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #ff4c4c;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  white-space: nowrap;
-  transition: background 0.3s;
-}
+    /* Main content */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #f9f9f9;
+      padding: 20px;
+      overflow: hidden;
+    }
 
-#slider {
-  width: 100%;
-  margin-top: 30px;
-}
+    /* Timeline container */
+    .timeline-container {
+      width: 80%;
+      position: relative;
+      margin-top: 50px;
+    }
+
+    .timeline {
+      position: relative;
+      height: 60px;
+      background: #eee;
+      border-radius: 30px;
+      overflow: visible;
+      white-space: nowrap;
+      transition: transform 0.3s;
+    }
+
+    /* Timeline events */
+    .event {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #ff4c4c;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      white-space: nowrap;
+      transition: background 0.3s;
+    }
+
+    /* Slider */
+    #slider {
+      width: 100%;
+      margin-top: 30px;
+    }
   </style>
 </head>
 <body>
-<div class="timeline-container">
-  <div class="timeline" id="timeline">
-    <div class="event" style="left:0%">1521: Ferdinand Magellan</div>
-    <div class="event" style="left:100%">1849: Claveria Decree</div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Sidebar</h2>
+    <p>This stays visible while dragging the timeline.</p>
+    <p>You can add navigation links or info here.</p>
   </div>
-  <input type="range" id="slider" min="0" max="100" value="0">
-</div>
 
+  <!-- Main content -->
+  <div class="main">
+    <h1>Historical Timeline</h1>
+    <div class="timeline-container">
+      <div class="timeline" id="timeline">
+        <div class="event" style="left:0%">1521: Ferdinand Magellan</div>
+        <div class="event" style="left:100%">1849: Claveria Decree</div>
+      </div>
+      <input type="range" id="slider" min="0" max="100" value="0">
+    </div>
+  </div>
+
+  <!-- JavaScript -->
   <script>
-const slider = document.getElementById('slider');
-const timeline = document.getElementById('timeline');
-const events = document.querySelectorAll('.event');
+    const slider = document.getElementById('slider');
+    const timeline = document.getElementById('timeline');
+    const events = document.querySelectorAll('.event');
 
-slider.addEventListener('input', () => {
-  const value = slider.value; // 0 to 100
-  // Move timeline (simulate sliding)
-  timeline.style.transform = `translateX(-${value}%)`;
+    slider.addEventListener('input', () => {
+      const value = slider.value; // 0 to 100
+      // Move timeline based on slider
+      timeline.style.transform = `translateX(-${value}%)`;
 
-  // Highlight events passed
-  events.forEach(event => {
-    const eventLeft = parseFloat(event.style.left);
-    if (eventLeft <= value) {
-      event.style.background = '#4CAF50'; // event reached
-    } else {
-      event.style.background = '#ff4c4c'; // upcoming
-    }
-  });
-});
+      // Highlight events
+      events.forEach(event => {
+        const eventLeft = parseFloat(event.style.left);
+        if (eventLeft <= value) {
+          event.style.background = '#4CAF50'; // passed
+        } else {
+          event.style.background = '#ff4c4c'; // upcoming
+        }
+      });
+    });
   </script>
 </body>
 </html>
