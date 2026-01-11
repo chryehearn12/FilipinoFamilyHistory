@@ -17,13 +17,6 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   display:flex;
   flex-direction:column;
   padding-top:20px;
-  align-items:center;
-}
-.sidebar-image img {
-  width: 80%;
-  border-radius: 50%;
-  display:block;
-  margin-bottom:10px;
 }
 .sidebar h2{text-align:center; margin-bottom:20px; font-size:18px;}
 .sidebar a{
@@ -61,8 +54,10 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   text-align: center;
   line-height: 1.4em;
   flex-shrink: 0;
+  position: relative;
 }
 
+/* Event description */
 .event-desc {
   font-size: 14px;
   color: white;
@@ -70,7 +65,7 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   display: block;
 }
 
-/* Carousel arrows */
+/* Carousel arrows floating */
 .timeline-controls {
   position: absolute;
   top: 50%;
@@ -78,11 +73,11 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   display: flex;
   justify-content: space-between;
   transform: translateY(-50%);
-  pointer-events: none; /* allow event box interaction */
+  pointer-events: none;
 }
 
 .timeline-controls button {
-  pointer-events: all; /* allow click */
+  pointer-events: all;
   background: rgba(211, 47, 47, 0.7);
   color: white;
   border: none;
@@ -103,6 +98,27 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
   cursor: default;
 }
 
+/* Carousel dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.carousel-dots span {
+  height: 12px;
+  width: 12px;
+  margin: 0 5px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.carousel-dots span.active {
+  background-color: #4CAF50;
+}
+
 /* Responsive */
 @media(max-width:768px){
   .wrapper{flex-direction:column;}
@@ -119,9 +135,6 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
 <div class="wrapper">
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="sidebar-image">
-      <img src="your-image.jpg" alt="Sidebar Image">
-    </div>
     <h2>Menu</h2>
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
@@ -153,10 +166,15 @@ body { margin:0; font-family:Arial; background:#f7f7f7; }
       </div>
     </div>
 
+    <!-- Floating arrows -->
     <div class="timeline-controls">
       <button id="prevBtn">&larr;</button>
       <button id="nextBtn">&rarr;</button>
     </div>
+
+    <!-- Carousel dots -->
+    <div class="carousel-dots" id="dotsContainer"></div>
+
   </div>
 </div>
 
@@ -165,16 +183,30 @@ const eventWrapper = document.getElementById('eventWrapper');
 const events = document.querySelectorAll('.event');
 const nextBtn = document.getElementById('nextBtn');
 const prevBtn = document.getElementById('prevBtn');
+const dotsContainer = document.getElementById('dotsContainer');
 
 let currentIndex = 0;
 
+// Create dots
+events.forEach((_, idx)=>{
+  const dot = document.createElement('span');
+  if(idx===0) dot.classList.add('active');
+  dotsContainer.appendChild(dot);
+});
+
+const dots = dotsContainer.querySelectorAll('span');
+
 function updateCarousel() {
-  const offset = -currentIndex * 100; // slide by 100% width
+  const offset = -currentIndex * 100;
   eventWrapper.style.transform = `translateX(${offset}%)`;
 
-  // disable arrows at ends
   prevBtn.disabled = currentIndex === 0;
   nextBtn.disabled = currentIndex === events.length - 1;
+
+  // update dots
+  dots.forEach((dot, idx)=>{
+    dot.classList.toggle('active', idx === currentIndex);
+  });
 }
 
 // Next
