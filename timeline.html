@@ -33,14 +33,14 @@
     align-items:center;
   }
 
-  /* Timeline container: fixed width, centered */
+  /* Timeline container */
   .timeline-container {
     width: 100%;
     max-width: 700px; /* timeline width */
     overflow: hidden;  /* prevent overlap */
     position: relative;
     margin: 60px auto; /* center in page vertically */
-    padding-top: 50px; /* space for event boxes */
+    padding-top: 60px; /* space for event boxes */
   }
 
   /* Timeline line */
@@ -56,7 +56,7 @@
   /* Event boxes */
   .event {
     position: absolute;
-    top: -30px; /* place above line */
+    top: -50px; /* place event above line */
     transform: translateY(0);
     background: #ff4c4c;
     color: white;
@@ -64,11 +64,26 @@
     border-radius: 5px;
     white-space: nowrap;
     transition: background 0.3s;
+    text-align: center;
   }
 
+  /* Event descriptions */
+  .event-desc {
+    font-size: 12px;
+    color: #000;
+    background: #fff;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin-top: 5px;
+    display: block;
+    max-width: 220px;
+    word-wrap: break-word;
+  }
+
+  /* Slider */
   #slider {
     width: 100%;
-    margin-top: 60px;
+    margin-top: 100px;
   }
 
   /* Responsive */
@@ -77,8 +92,8 @@
     .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
     .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
     .sidebar a:last-child{border-right:none;}
-    .timeline-container{max-width:95%; padding-top:60px;}
-    .event{top:-35px;}
+    .timeline-container{max-width:95%; padding-top:70px;}
+    .event{top:-60px;}
   }
 </style>
 </head>
@@ -104,8 +119,14 @@
     <h1>Historical Timeline</h1>
     <div class="timeline-container">
       <div class="timeline" id="timeline">
-        <div class="event" style="left:0%">1521: Ferdinand Magellan</div>
-        <div class="event" style="left:100%">1849: Claveria Decree</div>
+        <div class="event" style="left:0%">
+          1521: Ferdinand Magellan
+          <div class="event-desc">The Battle of Mactan was fought on the beach between Spanish forces led by Ferdinand and Lapulapu.</div>
+        </div>
+        <div class="event" style="left:100%">
+          1849: Claveria Decree
+          <div class="event-desc">The Spaniards issued the Claveria Decree in 1849 in an attempt to assign all Filipino surnames.</div>
+        </div>
       </div>
       <input type="range" id="slider" min="0" max="100" value="0">
     </div>
