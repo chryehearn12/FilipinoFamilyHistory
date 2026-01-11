@@ -1,88 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Timeline - Filipino Genealogy</title>
-  <style>
-    /* Base styles */
-    body { margin:0; font-family:Arial; background:#f7f7f7; }
-    
-    /* Wrapper and layout */
-    .wrapper{display:flex; min-height:100vh;}
-    .sidebar{
-      width:220px;
-      background:#d32f2f;
-      color:white;
-      flex-shrink:0;
-      display:flex;
-      flex-direction:column;
-      padding-top:20px;
-    }
-    .sidebar h2{text-align:center; margin-bottom:20px; font-size:18px;}
-    .sidebar a{
-      padding:12px 20px; display:block; color:white;
-      border-bottom:1px solid rgba(255,255,255,0.1);
-      text-decoration:none;
-    }
-    .sidebar a:hover{background:#b71c1c;}
-    
-    .main{
-      flex:1;
-      padding:20px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-    }
+<meta charset="UTF-8">
+<title>Timeline - Filipino Genealogy</title>
+<style>
+  body { margin:0; font-family:Arial; background:#f7f7f7; }
 
-    /* Timeline container */
-    .timeline-container {
-      width: 100%;
-      max-width: 800px;
-      overflow: visible;  /* allow events to be fully visible */
-      position: relative;
-      margin-top: 30px;
-      padding-top: 40px; /* space for event boxes above timeline line */
-    }
+  /* Wrapper and layout */
+  .wrapper{display:flex; min-height:100vh;}
+  .sidebar{
+    width:220px;
+    background:#d32f2f;
+    color:white;
+    flex-shrink:0;
+    display:flex;
+    flex-direction:column;
+    padding-top:20px;
+  }
+  .sidebar h2{text-align:center; margin-bottom:20px; font-size:18px;}
+  .sidebar a{
+    padding:12px 20px; display:block; color:white;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    text-decoration:none;
+  }
+  .sidebar a:hover{background:#b71c1c;}
 
-    /* Timeline line */
-    .timeline {
-      position: relative;
-      height: 8px; /* line thickness */
-      background: #eee;
-      border-radius: 4px;
-      white-space: nowrap;
-      transition: transform 0.3s;
-    }
+  .main{
+    flex:1;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
 
-    /* Event boxes */
-    .event {
-      position: absolute;
-      top: -30px; /* place event text above the line */
-      transform: translateY(0);
-      background: #ff4c4c;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      white-space: nowrap;
-      transition: background 0.3s;
-    }
+  /* Timeline container: fixed width, centered */
+  .timeline-container {
+    width: 100%;
+    max-width: 700px; /* timeline width */
+    overflow: hidden;  /* prevent overlap */
+    position: relative;
+    margin: 60px auto; /* center in page vertically */
+    padding-top: 50px; /* space for event boxes */
+  }
 
-    /* Slider */
-    #slider {
-      width: 100%;
-      margin-top: 60px;
-    }
+  /* Timeline line */
+  .timeline {
+    position: relative;
+    height: 8px; /* line thickness */
+    background: #eee;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: transform 0.3s;
+  }
 
-    /* Responsive */
-    @media(max-width:768px){
-      .wrapper{flex-direction:column;}
-      .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
-      .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
-      .sidebar a:last-child{border-right:none;}
-      .timeline-container{width:95%; padding-top:50px;}
-      .event{top:-35px;}
-    }
-  </style>
+  /* Event boxes */
+  .event {
+    position: absolute;
+    top: -30px; /* place above line */
+    transform: translateY(0);
+    background: #ff4c4c;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    transition: background 0.3s;
+  }
+
+  #slider {
+    width: 100%;
+    margin-top: 60px;
+  }
+
+  /* Responsive */
+  @media(max-width:768px){
+    .wrapper{flex-direction:column;}
+    .sidebar{width:100%; flex-direction:row; overflow-x:auto;}
+    .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
+    .sidebar a:last-child{border-right:none;}
+    .timeline-container{max-width:95%; padding-top:60px;}
+    .event{top:-35px;}
+  }
+</style>
 </head>
 <body>
 
@@ -114,7 +112,6 @@
   </div>
 </div>
 
-<!-- JavaScript -->
 <script>
   const slider = document.getElementById('slider');
   const timeline = document.getElementById('timeline');
@@ -122,16 +119,14 @@
 
   slider.addEventListener('input', () => {
     const value = slider.value; // 0 to 100
-    // Move timeline within container only
     timeline.style.transform = `translateX(-${value}%)`;
 
-    // Highlight events that have been passed
     events.forEach(event => {
       const eventLeft = parseFloat(event.style.left);
       if (eventLeft <= value) {
-        event.style.background = '#4CAF50'; // reached
+        event.style.background = '#4CAF50';
       } else {
-        event.style.background = '#ff4c4c'; // upcoming
+        event.style.background = '#ff4c4c';
       }
     });
   });
