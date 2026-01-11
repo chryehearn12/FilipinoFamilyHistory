@@ -33,19 +33,21 @@
       flex-direction:column;
       align-items:center;
     }
-    
-    /* Timeline container */
+
+    /* Timeline styles */
     .timeline-container {
-      width:80%;
-      margin-top:30px;
+      width: 100%;
+      max-width: 800px; /* keeps timeline inside main */
+      overflow: hidden;  /* prevents gray bar spilling */
+      position: relative;
+      margin-top: 30px;
     }
 
     .timeline {
       position: relative;
-      height: 60px;
+      height: 8px;
       background: #eee;
-      border-radius: 30px;
-      overflow: visible;
+      border-radius: 4px;
       white-space: nowrap;
       transition: transform 0.3s;
     }
@@ -64,7 +66,7 @@
 
     #slider {
       width: 100%;
-      margin-top: 30px;
+      margin-top: 40px;
     }
 
     /* Responsive */
@@ -115,14 +117,14 @@
 
   slider.addEventListener('input', () => {
     const value = slider.value; // 0 to 100
-    // Move timeline based on slider
+    // Move timeline within container only
     timeline.style.transform = `translateX(-${value}%)`;
 
-    // Highlight events
+    // Highlight events that have been passed
     events.forEach(event => {
       const eventLeft = parseFloat(event.style.left);
       if (eventLeft <= value) {
-        event.style.background = '#4CAF50'; // reached
+        event.style.background = '#4CAF50'; // passed
       } else {
         event.style.background = '#ff4c4c'; // upcoming
       }
