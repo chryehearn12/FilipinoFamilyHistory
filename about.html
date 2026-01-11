@@ -15,31 +15,45 @@
       flex-shrink:0;
       display:flex;
       flex-direction:column;
+      align-items:center; /* center everything inside */
       padding-top:20px;
-      align-items: center;
+      box-sizing: border-box;
     }
+
     /* Sidebar image */
-    .sidebar-image {
-      text-align: center;
-      margin-bottom: 15px;
-    }
     .sidebar-image img {
-      width: 80%;
-      border-radius: 50%; /* optional: make it circular */
+      max-width: 80%;      /* fits sidebar width */
+      height: auto;         /* maintain aspect ratio */
       display: block;
-      margin: 0 auto;
+      margin-bottom: 15px;
+      border-radius: 50%;   /* optional: circular image */
     }
-    .sidebar h2{text-align:center; margin-bottom:20px; font-size:18px;}
+
+    .sidebar h2{
+      text-align:center; 
+      margin-bottom:20px; 
+      font-size:18px;
+      width:100%;
+    }
+
     .sidebar a{
-      padding:12px 20px; display:block; color:white;
-      border-bottom:1px solid rgba(255,255,255,0.1);
-      text-decoration:none;
       width: 100%;
+      padding:12px 0; 
+      display:block; 
+      color:white; 
+      text-decoration:none;
+      text-align:center;
+      border-bottom:1px solid rgba(255,255,255,0.1);
+      box-sizing:border-box;
     }
+
     .sidebar a:hover{background:#b71c1c;}
 
     /* Main content */
-    .main{flex:1; padding:20px;}
+    .main{
+      flex:1; 
+      padding:20px;
+    }
 
     /* Responsive */
     @media(max-width:768px){
@@ -47,6 +61,7 @@
       .sidebar{width:100%; flex-direction:row; overflow-x:auto; align-items:center;}
       .sidebar a{flex:1; text-align:center; border-bottom:none; border-right:1px solid rgba(255,255,255,0.2);}
       .sidebar a:last-child{border-right:none;}
+      .sidebar-image img{max-width:50px; margin:0 10px 0 10px;}
     }
   </style>
 </head>
@@ -75,18 +90,19 @@
   <div class="main">
     <h1>About This Site</h1>
     <p>Filipino Family History is a personal genealogy indexing project dedicated to making historical parish records from the Philippines easier to search and access.</p>   
-    <p>Many Filipino family records survive only as handwritten church registers, which can be difficult to read. This website provides clear, searchable indexes drawn </p>      
-    <p>from these parish records, helping families access records more easily and efficiently.</p>
+    <p>Many Filipino family records survive only as handwritten church registers, which can be difficult to read. This website provides clear, searchable indexes drawn from these parish records, helping families access records more easily and efficiently.</p>
     <p>This project currently focuses on records from Moalboal, Cebu, and includes: </p>
-    <p>Baptism records </p>
-    <p>Confirmation records </p>
-    <p>Marriage records </p>
-    <p>Death records </p>
-    <p>Burial records </p>
-    <p>Most records date from the late 19th century to early 20th century, with coverage expanding gradually as more material is transcribed. </p>
-    <p>Additional parishes and regions - including other parts of Cebu and Bohol - may be added in the future. </p>
-    <p>Note - records have been transcribed carefully from FamilySearch records. As with all historical records, errors or inconsistencies may occur. </p>  
-    <p>This is a non commerical site. </p>  
+    <ul>
+      <li>Baptism records</li>
+      <li>Confirmation records</li>
+      <li>Marriage records</li>
+      <li>Death records</li>
+      <li>Burial records</li>
+    </ul>
+    <p>Most records date from the late 19th century to early 20th century, with coverage expanding gradually as more material is transcribed.</p>
+    <p>Additional parishes and regions - including other parts of Cebu and Bohol - may be added in the future.</p>
+    <p>Note: records have been transcribed carefully from FamilySearch records. As with all historical records, errors or inconsistencies may occur.</p>  
+    <p>This is a non-commercial site.</p>  
     <p>The search function is on the Home page, accessible via the sidebar.</p>
   </div>
 </div>
