@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alcantara</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: #d32f2f;
+      color: white;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+      box-sizing: border-box;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 20px 20px;
+      font-size: 18px;
+    }
+
+    .sidebar a {
+      padding: 12px 20px;
+      display: block;
+      color: white;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      text-decoration: underline;
+    }
+
+    .sidebar a:hover {
+      background: #b71c1c;
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 35px 30px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 36px;
+    }
+
+    h2 {
+      margin-top: 35px;
+      margin-bottom: 15px;
+      font-size: 26px;
+    }
+
+    p {
+      max-width: 900px;
+      line-height: 1.6;
+      font-size: 17px;
+    }
+
+    ul {
+      max-width: 900px;
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 25px;
+      color: #003366;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .note-box {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 20px 25px;
+      max-width: 900px;
+      margin-top: 20px;
+      box-sizing: border-box;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .wrapper {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        padding-top: 0;
+      }
+
+      .sidebar h2 {
+        display: none;
+      }
+
+      .sidebar a {
+        flex: 1;
+        text-align: center;
+        border-bottom: none;
+        border-right: 1px solid rgba(255,255,255,0.2);
+        white-space: nowrap;
+      }
+
+      .sidebar a:last-child {
+        border-right: none;
+      }
+
+      .main {
+        padding: 25px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Menu</h2>
+      <a href="../index.html">Home</a>
+      <a href="../about.html">About</a>
+      <a href="../baptism.html">Baptism Records</a>
+      <a href="../confirmation.html">Confirmation Records</a>
+      <a href="../marriage.html">Marriage Records</a>
+      <a href="../death.html">Death Records</a>
+      <a href="../burial.html">Burial Records</a>
+      <a href="../timeline.html">Timeline</a>
+      <a href="../places.html">Places</a>
+      <a href="../contact.html">Contact</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="main">
+
+      <a class="back-link" href="../places.html">← Back to Places</a>
+
+      <h1>Alcantara, Cebu</h1>
+
+      <p>
+        Alcantara is a municipality on the western side of Cebu. In this family history
+        website, Alcantara is included as a place connected to land records, family
+        movement, cultivation, and local settlement history.
+      </p>
+
+      <div class="note-box">
+        <h2>Research Notes</h2>
+
+        <p>
+          Alcantara appears in early twentieth-century notarial records connected to
+          land possession and cultivation. Some records describe parcels of land by
+          the amount of maize that could be planted there, and by the names of
+          neighbouring landholders.
+        </p>
+
+        <p>
+          These records are useful because they show not only individual ancestors,
+          but also the wider network of neighbours, land boundaries, occupations,
+          and settlement patterns.
+        </p>
+      </div>
+
+      <h2>Families and Surnames</h2>
+
+      <ul>
+        <li>Hernandez</li>
+        <li>Llanos</li>
+        <li>Silos</li>
+        <li>Sambilad</li>
+        <li>Lambo</li>
+        <li>Zamora</li>
+        <li>Tampepe</li>
+        <li>Pulgo</li>
+        <li>Panoril</li>
+      </ul>
+
+      <h2>Record Types</h2>
+
+      <ul>
+        <li>Land records</li>
+        <li>Notarial records</li>
+        <li>Boundary descriptions</li>
+        <li>Cultivation and possession claims</li>
+      </ul>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
