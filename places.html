@@ -12,7 +12,6 @@
     }
 
     a {
-      text-decoration: none;
       color: inherit;
     }
 
@@ -21,7 +20,7 @@
       min-height: 100vh;
     }
 
-    /* Sidebar (same as Baptism page) */
+    /* Sidebar */
     .sidebar {
       width: 220px;
       background: #d32f2f;
@@ -43,36 +42,60 @@
       display: block;
       color: white;
       border-bottom: 1px solid rgba(255,255,255,0.1);
+      text-decoration: underline;
     }
 
     .sidebar a:hover {
       background: #b71c1c;
     }
 
-    /* Main content (same spacing as Baptism page) */
+    /* Main content */
     .main {
       flex: 1;
-      padding: 20px;
+      padding: 35px 30px;
       box-sizing: border-box;
     }
 
     h1 {
-      text-align: center;
+      margin-top: 0;
       margin-bottom: 20px;
+      font-size: 36px;
     }
 
-    /* Outlined content box (matches table area feel) */
-    .content-box {
-      background: white;
-      padding: 25px 30px;
-      border: 1px solid #ddd;
-      max-width: 900px;
-      margin: 0 auto;
+    h2 {
+      margin-top: 35px;
+      margin-bottom: 15px;
+      font-size: 26px;
     }
 
-    .content-box p {
+    .place-note {
+      max-width: 850px;
       line-height: 1.6;
-      margin-bottom: 14px;
+      margin-bottom: 20px;
+      font-size: 17px;
+    }
+
+    /* Place columns */
+    .place-columns {
+      columns: 3;
+      column-gap: 70px;
+      max-width: 1000px;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    .place-columns a {
+      display: block;
+      font-size: 20px;
+      font-weight: bold;
+      color: #8b2d83;
+      text-decoration: underline;
+      margin-bottom: 10px;
+      break-inside: avoid;
+    }
+
+    .place-columns a:hover {
+      color: #d32f2f;
     }
 
     /* Mobile */
@@ -97,96 +120,90 @@
         text-align: center;
         border-bottom: none;
         border-right: 1px solid rgba(255,255,255,0.2);
+        white-space: nowrap;
       }
 
       .sidebar a:last-child {
         border-right: none;
       }
 
-      .content-box {
-        margin: 0;
+      .main {
+        padding: 25px 20px;
+      }
+
+      .place-columns {
+        columns: 2;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .place-columns {
+        columns: 1;
       }
     }
   </style>
 </head>
+
 <body>
 
-<div class="wrapper">
+  <div class="wrapper">
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>Menu</h2>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="baptism.html">Baptism Records</a>
-    <a href="confirmation.html">Confirmation Records</a>
-    <a href="marriage.html">Marriage Records</a>
-    <a href="death.html">Death Records</a>
-    <a href="burial.html">Burial Records</a>
-    <a href="timeline.html">Timeline</a>
-    <a href="places.html">Places</a>
-    <a href="contact.html">Contact</a>
-  </div>
-
-  <div class="main">
-
-    <h1>Places in the Records</h1>
-
-    <p class="place-note">
-      This page is an index of towns, parishes, and places connected to the records.
-      Click a place name to view notes about local history, family surnames, ancestors,
-      occupations, migration links, and records connected to that place.
-    </p>
-
-    <h2>Cebu</h2>
-
-    <div class="place-columns">
-      <a href="places/alcantara.html">Alcantara</a>
-      <a href="places/argao.html">Argao</a>
-      <a href="places/badian.html">Badian</a>
-      <a href="places/barili.html">Barili</a>
-      <a href="places/boljoon.html">Boljoon</a>
-      <a href="places/carcar.html">Carcar</a>
-      <a href="places/cebu-city.html">Cebu City</a>
-      <a href="places/dalaguete.html">Dalaguete</a>
-      <a href="places/moalboal.html">Moalboal</a>
-      <a href="places/ronda.html">Ronda</a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Menu</h2>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="baptism.html">Baptism Records</a>
+      <a href="confirmation.html">Confirmation Records</a>
+      <a href="marriage.html">Marriage Records</a>
+      <a href="death.html">Death Records</a>
+      <a href="burial.html">Burial Records</a>
+      <a href="timeline.html">Timeline</a>
+      <a href="places.html">Places</a>
+      <a href="contact.html">Contact</a>
     </div>
 
-    <h2>Bohol</h2>
+    <!-- Main content -->
+    <div class="main">
 
-    <div class="place-columns">
-      <a href="places/loay.html">Loay</a>
-    </div>
+      <h1>Places in the Records</h1>
 
-    <h2>Other / Unconfirmed Places</h2>
+      <p class="place-note">
+        This page is an index of towns, parishes, and places connected to the records.
+        Click a place name to view notes about local history, family surnames, ancestors,
+        occupations, migration links, and records connected to that place.
+      </p>
 
-    <div class="place-columns">
-      <a href="places/unknown.html">Unknown or Unconfirmed Places</a>
-    </div>
+      <h2>Cebu</h2>
 
-  </div>
-
-</body>
-</html>
-        <a class="place-card" href="places/cebu-city.html">
-          <h3>Cebu City</h3>
-          <p>A central place for broader colonial, church, administrative, and migration context.</p>
-        </a>
-
-        <a class="place-card" href="places/unknown.html">
-          <h3>Unknown or Unconfirmed Places</h3>
-          <p>For records where the place name is unclear, misspelled, damaged, or still being investigated.</p>
-        </a>
-
+      <div class="place-columns">
+        <a href="places/alcantara.html">Alcantara</a>
+        <a href="places/argao.html">Argao</a>
+        <a href="places/badian.html">Badian</a>
+        <a href="places/barili.html">Barili</a>
+        <a href="places/boljoon.html">Boljoon</a>
+        <a href="places/carcar.html">Carcar</a>
+        <a href="places/cebu-city.html">Cebu City</a>
+        <a href="places/dalaguete.html">Dalaguete</a>
+        <a href="places/moalboal.html">Moalboal</a>
+        <a href="places/ronda.html">Ronda</a>
       </div>
-    </section>
 
-  </main>
+      <h2>Bohol</h2>
 
-  <footer>
-    <p>Family history research website</p>
-  </footer>
+      <div class="place-columns">
+        <a href="places/loay.html">Loay</a>
+      </div>
+
+      <h2>Other / Unconfirmed Places</h2>
+
+      <div class="place-columns">
+        <a href="places/unknown.html">Unknown or Unconfirmed Places</a>
+      </div>
+
+    </div>
+
+  </div>
 
 </body>
 </html>
