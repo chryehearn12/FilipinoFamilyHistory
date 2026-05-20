@@ -1,207 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Places in the Records</title>
+  <title>Places - Filipino Genealogy</title>
+  <link rel="stylesheet" href="style.css">
 
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      background-color: #f8f4ef;
-      color: #3b2f2f;
+    .place-columns {
+      columns: 3;
+      column-gap: 60px;
+      max-width: 1000px;
+      margin-top: 20px;
+      margin-bottom: 35px;
     }
 
-    header {
-      background-color: #7b4f75;
-      color: white;
-      padding: 40px 20px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 42px;
-      letter-spacing: 1px;
-    }
-
-    header p {
-      margin-top: 10px;
-      font-size: 18px;
-      font-style: italic;
-    }
-
-    main {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    .intro {
-      text-align: center;
-      max-width: 750px;
-      margin: 0 auto 40px auto;
-      line-height: 1.7;
-      font-size: 18px;
-    }
-
-    .place-section {
-      margin-bottom: 50px;
-    }
-
-    .place-section h2 {
-      font-size: 30px;
-      color: #7b4f75;
-      border-bottom: 2px solid #c9adc6;
-      padding-bottom: 8px;
-      margin-bottom: 20px;
-    }
-
-    .place-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
-
-    .place-card {
+    .place-columns a {
       display: block;
-      background-color: white;
-      border: 1px solid #e2d6dd;
-      border-radius: 14px;
-      padding: 20px;
-      text-decoration: none;
-      color: #3b2f2f;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .place-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-      border-color: #7b4f75;
-    }
-
-    .place-card h3 {
-      margin: 0 0 8px 0;
-      font-size: 22px;
-      color: #7b4f75;
-    }
-
-    .place-card p {
-      margin: 0;
-      font-size: 15px;
-      line-height: 1.5;
-      color: #5d5151;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px 20px;
-      color: #7b6a6a;
-      font-size: 14px;
-    }
-
-    .back-link {
-      display: inline-block;
-      margin-bottom: 30px;
-      color: #7b4f75;
-      text-decoration: none;
+      font-size: 20px;
       font-weight: bold;
+      color: #b01e2e;
+      margin-bottom: 10px;
+      text-decoration: underline;
+      break-inside: avoid;
     }
 
-    .back-link:hover {
-      text-decoration: underline;
+    .place-columns a:hover {
+      color: #7a0f1c;
+    }
+
+    .place-note {
+      max-width: 850px;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    @media screen and (max-width: 900px) {
+      .place-columns {
+        columns: 2;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .place-columns {
+        columns: 1;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <header>
+  <div class="sidebar">
+    <h2>Menu</h2>
+
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="baptism.html">Baptism Records</a>
+    <a href="confirmation.html">Confirmation Records</a>
+    <a href="marriage.html">Marriage Records</a>
+    <a href="death.html">Death Records</a>
+    <a href="burial.html">Burial Records</a>
+    <a href="timeline.html">Timeline</a>
+    <a href="places.html">Places</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="main">
+
     <h1>Places in the Records</h1>
-    <p>A geographical index of towns, parishes, and family places</p>
-  </header>
 
-  <main>
+    <p class="place-note">
+      This page is an index of towns, parishes, and places connected to the records.
+      Click a place name to view notes about local history, family surnames, ancestors,
+      occupations, migration links, and records connected to that place.
+    </p>
 
-    <a class="back-link" href="index.html">← Back to Home</a>
+    <h2>Cebu</h2>
 
-    <section class="intro">
-      <p>
-        This index gathers the towns and parishes that appear in the family records.
-        Each place page includes notes about local history, surnames, ancestors,
-        occupations, parish records, and migration links.
-      </p>
-    </section>
+    <div class="place-columns">
+      <a href="places/alcantara.html">Alcantara</a>
+      <a href="places/argao.html">Argao</a>
+      <a href="places/badian.html">Badian</a>
+      <a href="places/barili.html">Barili</a>
+      <a href="places/boljoon.html">Boljoon</a>
+      <a href="places/carcar.html">Carcar</a>
+      <a href="places/cebu-city.html">Cebu City</a>
+      <a href="places/dalaguete.html">Dalaguete</a>
+      <a href="places/moalboal.html">Moalboal</a>
+      <a href="places/ronda.html">Ronda</a>
+    </div>
 
-    <section class="place-section">
-      <h2>Cebu</h2>
+    <h2>Bohol</h2>
 
-      <div class="place-grid">
+    <div class="place-columns">
+      <a href="places/loay.html">Loay</a>
+    </div>
 
-        <a class="place-card" href="places/argao.html">
-          <h3>Argao</h3>
-          <p>Carillo, Gallardo, Albarracin, Mendoza, Ligador and related families in nineteenth-century parish records.</p>
-        </a>
+    <h2>Other / Unconfirmed Places</h2>
 
-        <a class="place-card" href="places/dalaguete.html">
-          <h3>Dalaguete</h3>
-          <p>A southern Cebu town to connect with parish records, neighbouring families, and regional movement.</p>
-        </a>
+    <div class="place-columns">
+      <a href="places/unknown.html">Unknown or Unconfirmed Places</a>
+    </div>
 
-        <a class="place-card" href="places/moalboal.html">
-          <h3>Moalboal</h3>
-          <p>A later settlement area connected to migration, land clearing, family movement, and local tradition.</p>
-        </a>
+  </div>
 
-        <a class="place-card" href="places/alcantara.html">
-          <h3>Alcantara</h3>
-          <p>Connected to early twentieth-century land records, maize parcels, boundaries, and family possession claims.</p>
-        </a>
-
-        <a class="place-card" href="places/badian.html">
-          <h3>Badian</h3>
-          <p>A neighbouring southern Cebu town that may connect to Moalboal, Alcantara, and nearby family networks.</p>
-        </a>
-
-        <a class="place-card" href="places/ronda.html">
-          <h3>Ronda</h3>
-          <p>A nearby town for tracking parish links, surnames, and movement across western Cebu.</p>
-        </a>
-
-        <a class="place-card" href="places/barili.html">
-          <h3>Barili</h3>
-          <p>A western Cebu town useful for tracing older parish, migration, and family connections.</p>
-        </a>
-
-        <a class="place-card" href="places/boljoon.html">
-          <h3>Boljoon</h3>
-          <p>A historic southern Cebu parish that may help contextualise older church and settlement records.</p>
-        </a>
-
-      </div>
-    </section>
-
-    <section class="place-section">
-      <h2>Bohol</h2>
-
-      <div class="place-grid">
-
-        <a class="place-card" href="places/loay.html">
-          <h3>Loay</h3>
-          <p>A Bohol origin point connected to migration stories, family movement, and possible links to Cebu settlement.</p>
-        </a>
-
-      </div>
-    </section>
-
-    <section class="place-section">
-      <h2>Other Places</h2>
-
-      <div class="place-grid">
-
+</body>
+</html>
         <a class="place-card" href="places/cebu-city.html">
           <h3>Cebu City</h3>
           <p>A central place for broader colonial, church, administrative, and migration context.</p>
