@@ -217,6 +217,11 @@ function showDetails(record){
     <div class="detail-row"><span class="detail-label">Spouse:</span> ${record.spouse || "Unknown"}</div>
     <div class="detail-row"><span class="detail-label">Birth place:</span> ${record.birth_place || "Unknown"}</div>
     <div class="detail-row"><span class="detail-label">Cause of death:</span> ${record.cause_of_death || record.note || "Unknown"}</div>
+
+    <hr>
+
+    <div class="detail-row"><span class="detail-label">Source:</span> ${record.source || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Image number:</span> ${record.image_number || "Unknown"}</div>
   `;
 
   detailsBox.style.display = 'block';
