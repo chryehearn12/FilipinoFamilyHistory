@@ -22,10 +22,15 @@
     #searchBtn:disabled { background:#ccc; cursor:not-allowed; }
     #searchBtn:hover:enabled { background:#b71c1c; }
 
+    .search-info { text-align:center; margin-bottom:20px; }
+    .notice { color:#555; }
+
     table { width:100%; border-collapse:collapse; display:none; }
     th, td { padding:10px; border:1px solid #ddd; text-align:left; }
     th { background:#f2f2f2; }
     tr:hover { background:#f9f9f9; }
+
+    .hidden-col { display:none; }
 
     #noResults { text-align:center; margin-top:10px; display:none; color:#777; }
 
@@ -63,11 +68,11 @@
     </div>
 
     <div class="search-info">
-  <p class="notice">
-    Currently in progress: <strong>Moalboal Marriage Records, 1926-1929.</strong>
-  </p>
-</div>
-    
+      <p class="notice">
+        Currently in progress: <strong>Moalboal Marriage Records, 1926-1929.</strong>
+      </p>
+    </div>
+
     <table id="resultsTable">
       <thead>
         <tr>
@@ -77,10 +82,14 @@
           <th>Year</th>
           <th>Parish</th>
           <th>Place</th>
+          <th class="hidden-col">Date</th>
+          <th class="hidden-col">Source</th>
+          <th class="hidden-col">Image Number</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
+
     <div id="noResults">No results found.</div>
   </div>
 </div>
@@ -89,7 +98,7 @@
 let data = [];
 const searchBtn = document.getElementById('searchBtn');
 
-fetch('marriage.csv') // <-- use a separate CSV for burial records
+fetch('marriage.csv')
   .then(response => response.text())
   .then(text => {
     data = parseCSV(text);
@@ -102,50 +111,81 @@ fetch('marriage.csv') // <-- use a separate CSV for burial records
 
 function parseCSV(text){
   const lines = text.trim().split(/\r?\n/);
-  const headers = lines[0].split(',').map(h=>h.trim().toLowerCase().replace(' ','_'));
-  return lines.slice(1).map(line=>{
-    const regex=/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
-    const values=[...line.matchAll(regex)].map(m=>m[0].replace(/^"|"$/g,''));
-    const obj={};
-    headers.forEach((h,i)=>obj[h]=values[i]||'');
+  const headers = lines[0].split(',').map(h =>
+    h.trim().toLowerCase().replaceAll(' ', '_')
+  );
+
+  return lines.slice(1).map(line => {
+    const regex = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
+    const values = [...line.matchAll(regex)].map(m =>
+      m[0].replace(/^"|"$/g, '')
+    );
+
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = values[i] || '');
     return obj;
   });
 }
 
-searchBtn.addEventListener('click',()=>{
-  const query=document.getElementById('searchInput').value.toLowerCase().trim();
-  if(!query){
-    document.getElementById('resultsTable').style.display='none';
-    document.getElementById('noResults').style.display='none';
+searchBtn.addEventListener('click', () => {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  if (!query) {
+    document.getElementById('resultsTable').style.display = 'none';
+    document.getElementById('noResults').style.display = 'none';
     return;
   }
-  const filtered = data.filter(row=>Object.values(row).some(v=>v.toLowerCase().includes(query)));
+
+  const filtered = data.filter(row =>
+    Object.values(row).some(v => v.toLowerCase().includes(query))
+  );
+
   renderTable(filtered);
 });
 
-document.getElementById('searchInput').addEventListener('keypress', e=>{
-  if(e.key==='Enter') searchBtn.click();
+document.getElementById('searchInput').addEventListener('keypress', e => {
+  if (e.key === 'Enter') searchBtn.click();
 });
 
 function renderTable(rows){
-  const tbody=document.querySelector('#resultsTable tbody');
-  tbody.innerHTML='';
-  if(rows.length===0){
-    document.getElementById('resultsTable').style.display='none';
-    document.getElementById('noResults').style.display='block';
+  const tbody = document.querySelector('#resultsTable tbody');
+  tbody.innerHTML = '';
+
+  if (rows.length === 0) {
+    document.getElementById('resultsTable').style.display = 'none';
+    document.getElementById('noResults').style.display = 'block';
     return;
   }
-  rows.forEach(r=>{
-    const tr=document.createElement('tr');
-    ['surname','given_name','spouse','year','parish','place'].forEach(k=>{
-      const td=document.createElement('td');
-      td.textContent=r[k]||'';
+
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+
+    [
+      'surname',
+      'given_name',
+      'spouse',
+      'year',
+      'parish',
+      'place',
+      'date',
+      'source',
+      'image_number'
+    ].forEach(k => {
+      const td = document.createElement('td');
+      td.textContent = r[k] || '';
+
+      if (k === 'date' || k === 'source' || k === 'image_number') {
+        td.classList.add('hidden-col');
+      }
+
       tr.appendChild(td);
     });
+
     tbody.appendChild(tr);
   });
-  document.getElementById('resultsTable').style.display='table';
-  document.getElementById('noResults').style.display='none';
+
+  document.getElementById('resultsTable').style.display = 'table';
+  document.getElementById('noResults').style.display = 'none';
 }
 </script>
 
