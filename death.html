@@ -209,6 +209,15 @@ function renderTable(rows){
 function showDetails(record){
   const detailsBox = document.getElementById('detailsBox');
 
+  const year = record.year || "";
+  const age = record.age || "";
+
+  let estimatedBirthYear = "";
+
+  if (year && age && !isNaN(year) && !isNaN(age)) {
+    estimatedBirthYear = Number(year) - Number(age);
+  }
+
   detailsBox.innerHTML = `
     <h2>${record.given_name || "Unknown"} ${record.surname || ""}</h2>
 
@@ -219,8 +228,11 @@ function showDetails(record){
     <hr>
 
     <div class="detail-row"><span class="detail-label">Age:</span> ${record.age || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Estimated birth year:</span> ${estimatedBirthYear ? "c. " + estimatedBirthYear : "Unknown"}</div>
     <div class="detail-row"><span class="detail-label">Residence:</span> ${record.residence || "Unknown"}</div>
     <div class="detail-row"><span class="detail-label">Civil status:</span> ${record.civil_status || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Spouse:</span> ${record.spouse || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Birth place:</span> ${record.birth_place || "Unknown"}</div>
     <div class="detail-row"><span class="detail-label">Cause of death:</span> ${record.cause_of_death || record.note || "Unknown"}</div>
   `;
 
