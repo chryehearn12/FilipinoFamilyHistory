@@ -22,12 +22,44 @@
     #searchBtn:disabled { background:#ccc; cursor:not-allowed; }
     #searchBtn:hover:enabled { background:#b71c1c; }
 
-    table { width:100%; border-collapse:collapse; display:none; }
+    table { width:100%; border-collapse:collapse; display:none; background:white; }
     th, td { padding:10px; border:1px solid #ddd; text-align:left; }
     th { background:#f2f2f2; }
-    tr:hover { background:#f9f9f9; }
+    tr:hover { background:#f9f9f9; cursor:pointer; }
 
     #noResults { text-align:center; margin-top:10px; display:none; color:#777; }
+
+    #detailsBox {
+      display:none;
+      margin-top:20px;
+      padding:18px;
+      background:white;
+      border:1px solid #ddd;
+      border-left:5px solid #d32f2f;
+      border-radius:4px;
+    }
+
+    #detailsBox h2 {
+      margin-top:0;
+      color:#d32f2f;
+    }
+
+    .detail-row {
+      margin:6px 0;
+    }
+
+    .detail-label {
+      font-weight:bold;
+    }
+
+    .search-info {
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .notice {
+      color:#555;
+    }
 
     @media(max-width:768px){
       .wrapper{flex-direction:column;}
@@ -63,10 +95,10 @@
     </div>
 
     <div class="search-info">
-  <p class="notice">
-    Currently in progress: <strong>Moalboal Baptism Records, 1867-1868.</strong>
-  </p>
-</div>
+      <p class="notice">
+        Currently in progress: <strong>Moalboal Baptism Records, 1867-1868.</strong>
+      </p>
+    </div>
 
     <table id="resultsTable">
       <thead>
@@ -82,7 +114,9 @@
       </thead>
       <tbody></tbody>
     </table>
+
     <div id="noResults">No results found.</div>
+    <div id="detailsBox"></div>
   </div>
 </div>
 
@@ -90,7 +124,7 @@
 let data = [];
 const searchBtn = document.getElementById('searchBtn');
 
-fetch('baptism.csv') // <-- use a separate CSV for baptism records
+fetch('baptism.csv')
   .then(response => response.text())
   .then(text => {
     data = parseCSV(text);
@@ -103,50 +137,85 @@ fetch('baptism.csv') // <-- use a separate CSV for baptism records
 
 function parseCSV(text){
   const lines = text.trim().split(/\r?\n/);
-  const headers = lines[0].split(',').map(h=>h.trim().toLowerCase().replace(' ','_'));
-  return lines.slice(1).map(line=>{
-    const regex=/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
-    const values=[...line.matchAll(regex)].map(m=>m[0].replace(/^"|"$/g,''));
-    const obj={};
-    headers.forEach((h,i)=>obj[h]=values[i]||'');
+
+  const headers = lines[0].split(',').map(h =>
+    h.trim().toLowerCase().replaceAll(' ', '_')
+  );
+
+  return lines.slice(1).map(line => {
+    const values = line.split(','); // keeps blank fields correctly
+    const obj = {};
+
+    headers.forEach((h, i) => {
+      obj[h] = values[i] ? values[i].trim() : "";
+    });
+
     return obj;
   });
 }
 
-searchBtn.addEventListener('click',()=>{
-  const query=document.getElementById('searchInput').value.toLowerCase().trim();
-  if(!query){
-    document.getElementById('resultsTable').style.display='none';
-    document.getElementById('noResults').style.display='none';
+searchBtn.addEventListener('click', () => {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  document.getElementById('detailsBox').style.display = 'none';
+
+  if(query.length < 3){
+    document.getElementById('resultsTable').style.display = 'none';
+    document.getElementById('noResults').style.display = 'none';
     return;
   }
-  const filtered = data.filter(row=>Object.values(row).some(v=>v.toLowerCase().includes(query)));
+
+  const filtered = data.filter(row =>
+    Object.values(row).some(v => String(v).toLowerCase().includes(query))
+  );
+
   renderTable(filtered);
 });
 
-document.getElementById('searchInput').addEventListener('keypress', e=>{
-  if(e.key==='Enter') searchBtn.click();
+document.getElementById('searchInput').addEventListener('keypress', e => {
+  if(e.key === 'Enter') searchBtn.click();
 });
 
 function renderTable(rows){
-  const tbody=document.querySelector('#resultsTable tbody');
-  tbody.innerHTML='';
-  if(rows.length===0){
-    document.getElementById('resultsTable').style.display='none';
-    document.getElementById('noResults').style.display='block';
+  const tbody = document.querySelector('#resultsTable tbody');
+  tbody.innerHTML = '';
+
+  if(rows.length === 0){
+    document.getElementById('resultsTable').style.display = 'none';
+    document.getElementById('noResults').style.display = 'block';
+    document.getElementById('detailsBox').style.display = 'none';
     return;
   }
-  rows.forEach(r=>{
-    const tr=document.createElement('tr');
-    ['surname','given_name','father','mother','year','parish','place'].forEach(k=>{
-      const td=document.createElement('td');
-      td.textContent=r[k]||'';
+
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+
+    ['surname','given_name','father','mother','year','parish','place'].forEach(k => {
+      const td = document.createElement('td');
+      td.textContent = r[k] || '';
       tr.appendChild(td);
     });
+
+    tr.addEventListener('click', () => showDetails(r));
+
     tbody.appendChild(tr);
   });
-  document.getElementById('resultsTable').style.display='table';
-  document.getElementById('noResults').style.display='none';
+
+  document.getElementById('resultsTable').style.display = 'table';
+  document.getElementById('noResults').style.display = 'none';
+}
+
+function showDetails(record){
+  const detailsBox = document.getElementById('detailsBox');
+
+  detailsBox.innerHTML = `
+    <h2>${record.given_name || "Unknown"} ${record.surname || ""}</h2>
+
+    <div class="detail-row"><span class="detail-label">Source:</span> ${record.source || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Image number:</span> ${record.image_number || "Unknown"}</div>
+  `;
+
+  detailsBox.style.display = 'block';
 }
 </script>
 
