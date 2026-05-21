@@ -204,12 +204,6 @@ function showDetails(record){
   detailsBox.innerHTML = `
     <h2>${record.given_name || "Unknown"} ${record.surname || ""}</h2>
 
-    <div class="detail-row"><span class="detail-label">Year:</span> ${record.year || "Unknown"}</div>
-    <div class="detail-row"><span class="detail-label">Parish:</span> ${record.parish || "Unknown"}</div>
-    <div class="detail-row"><span class="detail-label">Place:</span> ${record.place || "Unknown"}</div>
-
-    <hr>
-
     <div class="detail-row"><span class="detail-label">Age:</span> ${record.age || "Unknown"}</div>
     <div class="detail-row"><span class="detail-label">Estimated birth year:</span> ${estimatedBirthYear ? "c. " + estimatedBirthYear : "Unknown"}</div>
     <div class="detail-row"><span class="detail-label">Residence:</span> ${record.residence || "Unknown"}</div>
