@@ -128,7 +128,7 @@ function parseCSV(text){
   );
 
   return lines.slice(1).map(line => {
-    const values = line.split(','); // keeps blank fields correctly
+    const values = line.split(',');
     const obj = {};
 
     headers.forEach((h, i) => {
@@ -144,7 +144,7 @@ searchBtn.addEventListener('click', () => {
 
   document.getElementById('detailsBox').style.display = 'none';
 
-  if(!query){
+  if(query.length < 3){
     document.getElementById('resultsTable').style.display = 'none';
     document.getElementById('noResults').style.display = 'none';
     return;
