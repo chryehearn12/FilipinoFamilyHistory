@@ -22,12 +22,44 @@
     #searchBtn:disabled { background:#ccc; cursor:not-allowed; }
     #searchBtn:hover:enabled { background:#b71c1c; }
 
-    table { width:100%; border-collapse:collapse; display:none; }
+    table { width:100%; border-collapse:collapse; display:none; background:white; }
     th, td { padding:10px; border:1px solid #ddd; text-align:left; }
     th { background:#f2f2f2; }
-    tr:hover { background:#f9f9f9; }
+    tr:hover { background:#f9f9f9; cursor:pointer; }
 
     #noResults { text-align:center; margin-top:10px; display:none; color:#777; }
+
+    #detailsBox {
+      display:none;
+      margin-top:20px;
+      padding:18px;
+      background:white;
+      border:1px solid #ddd;
+      border-left:5px solid #d32f2f;
+      border-radius:4px;
+    }
+
+    #detailsBox h2 {
+      margin-top:0;
+      color:#d32f2f;
+    }
+
+    .detail-row {
+      margin:6px 0;
+    }
+
+    .detail-label {
+      font-weight:bold;
+    }
+
+    .search-info {
+      text-align:center;
+      margin-bottom:20px;
+    }
+
+    .notice {
+      color:#555;
+    }
 
     @media(max-width:768px){
       .wrapper{flex-direction:column;}
@@ -63,11 +95,12 @@
     </div>
 
     <div class="search-info">
-  <p class="notice">
-    Currently in progress: <strong>Alcantara Death Records, 1922-1928.</strong>
-                           <strong> Badian. Death Registers 1952–1959.</strong>
-  </p>
-</div>
+      <p class="notice">
+        Currently in progress:
+        <strong>Alcantara Death Records, 1922-1928.</strong>
+        <strong>Badian Death Registers, 1952–1959.</strong>
+      </p>
+    </div>
 
     <table id="resultsTable">
       <thead>
@@ -77,12 +110,14 @@
           <th>Year</th>
           <th>Parish</th>          
           <th>Place</th>
-          <th>Note</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
+
     <div id="noResults">No results found.</div>
+
+    <div id="detailsBox"></div>
   </div>
 </div>
 
@@ -90,7 +125,7 @@
 let data = [];
 const searchBtn = document.getElementById('searchBtn');
 
-fetch('death.csv') // <-- use a separate CSV for death records
+fetch('death.csv')
   .then(response => response.text())
   .then(text => {
     data = parseCSV(text);
@@ -103,50 +138,93 @@ fetch('death.csv') // <-- use a separate CSV for death records
 
 function parseCSV(text){
   const lines = text.trim().split(/\r?\n/);
-  const headers = lines[0].split(',').map(h=>h.trim().toLowerCase().replace(' ','_'));
-  return lines.slice(1).map(line=>{
-    const regex=/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
-    const values=[...line.matchAll(regex)].map(m=>m[0].replace(/^"|"$/g,''));
-    const obj={};
-    headers.forEach((h,i)=>obj[h]=values[i]||'');
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replaceAll(' ', '_'));
+
+  return lines.slice(1).map(line => {
+    const regex = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
+    const values = [...line.matchAll(regex)].map(m => m[0].replace(/^"|"$/g,''));
+    const obj = {};
+
+    headers.forEach((h, i) => {
+      obj[h] = values[i] ? values[i].trim() : "";
+    });
+
     return obj;
   });
 }
 
-searchBtn.addEventListener('click',()=>{
-  const query=document.getElementById('searchInput').value.toLowerCase().trim();
+searchBtn.addEventListener('click', () => {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  document.getElementById('detailsBox').style.display = 'none';
+
   if(!query){
-    document.getElementById('resultsTable').style.display='none';
-    document.getElementById('noResults').style.display='none';
+    document.getElementById('resultsTable').style.display = 'none';
+    document.getElementById('noResults').style.display = 'none';
     return;
   }
-  const filtered = data.filter(row=>Object.values(row).some(v=>v.toLowerCase().includes(query)));
+
+  const filtered = data.filter(row =>
+    Object.values(row).some(v => String(v).toLowerCase().includes(query))
+  );
+
   renderTable(filtered);
 });
 
-document.getElementById('searchInput').addEventListener('keypress', e=>{
-  if(e.key==='Enter') searchBtn.click();
+document.getElementById('searchInput').addEventListener('keypress', e => {
+  if(e.key === 'Enter') searchBtn.click();
 });
 
 function renderTable(rows){
-  const tbody=document.querySelector('#resultsTable tbody');
-  tbody.innerHTML='';
-  if(rows.length===0){
-    document.getElementById('resultsTable').style.display='none';
-    document.getElementById('noResults').style.display='block';
+  const tbody = document.querySelector('#resultsTable tbody');
+  tbody.innerHTML = '';
+
+  if(rows.length === 0){
+    document.getElementById('resultsTable').style.display = 'none';
+    document.getElementById('noResults').style.display = 'block';
+    document.getElementById('detailsBox').style.display = 'none';
     return;
   }
-  rows.forEach(r=>{
-    const tr=document.createElement('tr');
-    ['surname','given_name','year','parish','place','note'].forEach(k=>{
-      const td=document.createElement('td');
-      td.textContent=r[k]||'';
+
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+
+    // These are the ONLY columns shown in the visible table.
+    ['surname','given_name','year','parish','place'].forEach(k => {
+      const td = document.createElement('td');
+      td.textContent = r[k] || '';
       tr.appendChild(td);
     });
+
+    // When the row is clicked, hidden details appear below.
+    tr.addEventListener('click', () => showDetails(r));
+
     tbody.appendChild(tr);
   });
-  document.getElementById('resultsTable').style.display='table';
-  document.getElementById('noResults').style.display='none';
+
+  document.getElementById('resultsTable').style.display = 'table';
+  document.getElementById('noResults').style.display = 'none';
+}
+
+function showDetails(record){
+  const detailsBox = document.getElementById('detailsBox');
+
+  detailsBox.innerHTML = `
+    <h2>${record.given_name || "Unknown"} ${record.surname || ""}</h2>
+
+    <div class="detail-row"><span class="detail-label">Year:</span> ${record.year || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Parish:</span> ${record.parish || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Place:</span> ${record.place || "Unknown"}</div>
+
+    <hr>
+
+    <div class="detail-row"><span class="detail-label">Age:</span> ${record.age || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Residence:</span> ${record.residence || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Civil status:</span> ${record.civil_status || "Unknown"}</div>
+    <div class="detail-row"><span class="detail-label">Cause of death:</span> ${record.cause_of_death || record.note || "Unknown"}</div>
+  `;
+
+  detailsBox.style.display = 'block';
 }
 </script>
 
